@@ -5,7 +5,7 @@ from unittest import mock
 
 import turnbattle
 from turnbattle import Character, Action, Battle, Turn
-import logger
+from logger import ListLogger, NullLogger
 
 
 class TestCharacter(unittest.TestCase):
@@ -90,23 +90,24 @@ class TestTurn(unittest.TestCase):
 		c1 = Character(100, 50, 50)
 		c2 = Character(10, 10, 10)
 		turn = Turn({c1, c2})
-		alivers = turn.exec()
-		self.assertEqual(1, len(alivers))
+		survivor = turn.exec()
+		self.assertEqual(1, len(survivor))
 	
 													
 class TestBattle(unittest.TestCase):
 	
 	def setUp(self):
-		turnbattle.log = logger.Logger()
+		turnbattle.log = ListLogger()
 		
 	def tearDown(self):
-		turnbattle.log = logger.NullLogger()
+		turnbattle.log = NullLogger()
 	
 	def test_two(self):
 		c1 = Character(50, 20, 20, 'Hoge')
 		c2 = Character(30, 16, 16, 'Piyo')
 		characters = (c1, c2)
 		battle = Battle(characters)
+		self.assertEqual(1, battle._turn_num)
 		self.assertEqual(2, len(battle._characters))
 		winner = battle.exec()
 		self.assertEqual(c1, winner)

@@ -2,13 +2,13 @@
 
 import unittest
 
-from logger import Logger, NullLogger
+from logger import ListLogger, NullLogger
 
 
 class TestLogger(unittest.TestCase):
 	
 	def test_case(self):
-		logger = Logger()
+		logger = ListLogger()
 		self.assertEqual(0, logger.length)
 		logger.add('log1')
 		self.assertEqual(1, logger.length)
