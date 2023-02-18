@@ -57,9 +57,9 @@ class TestUnit(unittest.TestCase):
 class TestMap(unittest.TestCase):
 
     def test_init(self):
-        map = _create_map1()
-        self.assertEqual(5, map.width)
-        self.assertEqual(4, map.height)
+        map_ = _create_map1()
+        self.assertEqual(5, map_.width)
+        self.assertEqual(4, map_.height)
 
     def test_add_unit(self):
         unit = Unit(GridPosition(3, 2))
@@ -74,64 +74,64 @@ class TestMap(unittest.TestCase):
         self.assertIsNone(ret_unit)
 
     def test_get_cost(self):
-        map = _create_map1()
-        self.assertEqual(Ground.COST_FORBIDDEN, map.get_cost(GridPosition(0, 0)))
-        self.assertEqual(1, map.get_cost(GridPosition(1, 1)))
+        map_ = _create_map1()
+        self.assertEqual(Ground.COST_FORBIDDEN, map_.get_cost(GridPosition(0, 0)))
+        self.assertEqual(1, map_.get_cost(GridPosition(1, 1)))
 
-        map = _create_map2()
-        self.assertEqual(2, map.get_cost(GridPosition(2, 2)))
+        map_ = _create_map2()
+        self.assertEqual(2, map_.get_cost(GridPosition(2, 2)))
 
     def test_get_ground(self):
-        map = _create_map1()
-        g = map.get_ground(GridPosition(0, 0))
+        map_ = _create_map1()
+        g = map_.get_ground(GridPosition(0, 0))
         self.assertIs(_GROUND_DICT[1], g)
 
     def test_is_range(self):
-        map = _create_map1()
+        map_ = _create_map1()
         self.assertTrue(
-            map.is_range(GridPosition(0, 0)))
+            map_.is_range(GridPosition(0, 0)))
         self.assertTrue(
-            map.is_range(GridPosition(4, 3)))
+            map_.is_range(GridPosition(4, 3)))
         self.assertFalse(
-            map.is_range(GridPosition(5, 3)))
+            map_.is_range(GridPosition(5, 3)))
         self.assertFalse(
-            map.is_range(GridPosition(4, 4)))
+            map_.is_range(GridPosition(4, 4)))
 
     def test_can_move(self):
-        map = _create_map1()
+        map_ = _create_map1()
 
         # 移動可
         pos = GridPosition(2, 1)
-        can = map.can_move(pos, 1)
+        can = map_.can_move(pos, 1)
         self.assertTrue(can)
 
         # 範囲外
         pos = GridPosition(9, 9)
-        can = map.can_move(pos, 5)
+        can = map_.can_move(pos, 5)
         self.assertFalse(can)
 
         # 進入不可
         pos = GridPosition(2, 0)
-        can = map.can_move(pos, 1)
+        can = map_.can_move(pos, 1)
         self.assertFalse(can)
 
         # 移動力不足
         pos = GridPosition(2, 2)
-        can = map.can_move(pos, 0)
+        can = map_.can_move(pos, 0)
         self.assertFalse(can)
 
         # コスト2の位置
-        map = _create_map2()
+        map_ = _create_map2()
         pos = GridPosition(2, 2)
-        can = map.can_move(pos, 2)
+        can = map_.can_move(pos, 2)
         self.assertTrue(can)
-        can = map.can_move(pos, 1)
+        can = map_.can_move(pos, 1)
         self.assertFalse(can)
 
         # 他のユニットがいる
         unit = Unit(GridPosition(2, 1))
-        map.add_unit(unit)
-        can = map.can_move(pos, 1)
+        map_.add_unit(unit)
+        can = map_.can_move(pos, 1)
         self.assertFalse(can)
 
 
@@ -152,18 +152,18 @@ class TestGround(unittest.TestCase):
 class TestMoveMap(unittest.TestCase):
 
     def test_init(self):
-        map = _create_map1()
-        move_map = MoveMap(map)
-        self.assertIs(map, move_map._map)
-        self.assertEqual(map.height, len(move_map._moves))
-        self.assertEqual(map.width, len(move_map._moves[0]))
+        map_ = _create_map1()
+        move_map = MoveMap(map_)
+        self.assertIs(map_, move_map._map)
+        self.assertEqual(map_.height, len(move_map._moves))
+        self.assertEqual(map_.width, len(move_map._moves[0]))
         self.assertEqual(MoveMap.UNSET_VALUE, move_map.get_step(GridPosition(1, 1)))
 
     def test_calc(self):
-        map = _create_map2()
+        map_ = _create_map2()
         other_unit = Unit(GridPosition(1, 3))
-        map.add_unit(other_unit)
-        move_map = MoveMap(map)
+        map_.add_unit(other_unit)
+        move_map = MoveMap(map_)
         unit = Unit(
             GridPosition(3, 3),
             move=3)
@@ -180,8 +180,8 @@ class TestMoveMap(unittest.TestCase):
         self.assertEqual(expected, move_map._moves)
 
     def test_calc_step(self):
-        map = _create_map1()
-        move_map = MoveMap(map)
+        map_ = _create_map1()
+        move_map = MoveMap(map_)
 
         # その場
         move_map._reset()
@@ -233,8 +233,8 @@ class TestMoveMap(unittest.TestCase):
             MoveMap.UNSET_VALUE, move_map.get_step(target))
 
     def test_can_move(self):
-        map = _create_map2()
-        move_map = MoveMap(map)
+        map_ = _create_map2()
+        move_map = MoveMap(map_)
         unit = Unit(
             GridPosition(3, 3),
             move=3)
@@ -254,10 +254,10 @@ class TestSLGMove(unittest.TestCase):
     """各機能を利用したサンプル."""
 
     def test_case(self):
-        map = _create_map2()
+        map_ = _create_map2()
         print('')
         print('[Map]')
-        map.dump()
+        map_.dump()
         print('')
 
         unit = Unit(
@@ -266,9 +266,9 @@ class TestSLGMove(unittest.TestCase):
             name='Hoge')
         print('[Unit]')
         print(unit)
-        map.add_unit(unit)
+        map_.add_unit(unit)
 
-        move_map = MoveMap(map)
+        move_map = MoveMap(map_)
         move_map.calc(unit)
         print('')
         print(f'[MoveMap for {unit.name}]')
