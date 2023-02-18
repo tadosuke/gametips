@@ -45,16 +45,6 @@ class TestTask(unittest.TestCase):
 		self.assertFalse(a.has_child())
 		self.assertFalse(a.is_exit())
 
-	def test_add_child(self):
-		a = TaskA()
-		b = TaskB(a)
-		self.assertTrue(a.has_child())
-		self.assertFalse(b.has_child())
-
-		c = TaskC(b)
-		self.assertTrue(b.has_child())
-		self.assertFalse(c.has_child())
-
 	def test_update(self):
 		global _order
 		_order = ''
@@ -69,6 +59,16 @@ class TestTask(unittest.TestCase):
 		d = TaskD(b)
 		a.update(0)
 		self.assertEqual('abdc', _order)
+
+	def test_add_child(self):
+		a = TaskA()
+		b = TaskB(a)
+		self.assertTrue(a.has_child())
+		self.assertFalse(b.has_child())
+
+		c = TaskC(b)
+		self.assertTrue(b.has_child())
+		self.assertFalse(c.has_child())
 
 	def test_exit(self):
 		a = TaskA()
