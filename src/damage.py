@@ -3,36 +3,46 @@
 from enum import Enum, auto
 
 
-class Attribute(Enum):
-    """攻撃属性."""
+class AttackType(Enum):
+    """攻撃タイプ."""
 
-    NONE = auto()
-    FIRE = auto()
-    WATER = auto()
-    WIND = auto()
-    EARTH = auto()
+    PHYSICS = auto()  # 物理攻撃
+    MAGIC = auto()  # 魔法攻撃
+
+
+class Attribute(Enum):
+    """属性."""
+
+    NONE = auto()  # 無
+    FIRE = auto()  # 火
+    WATER = auto()  # 水
+    WIND = auto()  # 風
+    EARTH = auto()  # 土
 
 
 class AttackInfo:
     """攻撃情報.
 
-    :param power: 攻撃力
+    :param power: 威力
+    :param type_: 攻撃タイプ
     :param attr: 属性
     """
 
     def __init__(
             self,
             power: int,
+            type_: AttackType = AttackType.PHYSICS,
             attr: Attribute = Attribute.NONE) -> None:
         if power < 0:
             raise ValueError
 
         self._power = power
+        self._type = type_
         self._attr = attr
 
     @property
     def power(self) -> int:
-        """攻撃力."""
+        """威力."""
 
         return self._power
 
@@ -42,32 +52,53 @@ class AttackInfo:
 
         return self._attr
 
+    def is_physics(self) -> bool:
+        """物理攻撃か？"""
+
+        return self._type == AttackType.PHYSICS
+
+    def is_magic(self) -> bool:
+        """魔法攻撃か？"""
+
+        return self._type == AttackType.MAGIC
+
 
 class DefenceInfo:
     """防御情報.
 
-    :param power: 攻撃力
+    :param physics: 物理防御力
+    :param magic: 魔法防御力
     :param res_dict: 属性抵抗率の辞書（属性→抵抗率）
     """
 
     def __init__(
             self,
-            power: int,
+            physics: int,
+            magic: int,
             res_dict: dict[Attribute, float] = None) -> None:
-        if power < 0:
+        if physics < 0:
+            raise ValueError
+        if magic < 0:
             raise ValueError
 
-        self._power = power
+        self._physics = physics
+        self._magic = magic
         if res_dict is None:
             self._res_dict = {}
         else:
             self._res_dict = res_dict
 
     @property
-    def power(self) -> int:
-        """防御力."""
+    def physical_power(self) -> int:
+        """物理防御力."""
 
-        return self._power
+        return self._physics
+
+    @property
+    def magical_power(self) -> int:
+        """魔法防御力."""
+
+        return self._magic
 
     def get_regist(self, attr: Attribute) -> float:
         """属性抵抗率を得ます.
@@ -98,22 +129,37 @@ class Damage:
         self._value = self._calc()
 
     @property
-    def value(self) -> float:
+    def value(self) -> int:
         """ダメージ値."""
 
         return self._value
 
-    def _calc(self) -> float:
+    def _calc(self) -> int:
         """ダメージ値を計算します.
+
+        丸め誤差を少なくするため、ギリギリまで float で計算し、最後に int で丸めた値を返します。
 
         :return: ダメージ値
         """
 
         at_pow = self._attack.power
-        df_pow = self._defence.power
+
+        if self._attack.is_physics():
+            df_pow = self._defence.physical_power
+        elif self._attack.is_magic():
+            df_pow = self._defence.magical_power
+        else:
+            raise NotImplementedError
+
+        # 基本ダメージ
         val = at_pow - df_pow
+        if val <= 0:
+            return 0
+
+        # 属性抵抗
         val = self._apply_regist(val)
-        return val
+
+        return int(val)
 
     def _apply_regist(self, val: float) -> float:
         """属性抵抗率を適用します.
@@ -125,4 +171,3 @@ class Damage:
         attr = self._attack.attribute
         ratio = self._defence.get_regist(attr)
         return val * ratio
-
