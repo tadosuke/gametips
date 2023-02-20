@@ -126,7 +126,7 @@ class Damage:
             defence: DefenceInfo) -> None:
         self._attack = attack
         self._defence = defence
-        self._value = self._calc()
+        self._value = 0
 
     @property
     def value(self) -> int:
@@ -134,7 +134,7 @@ class Damage:
 
         return self._value
 
-    def _calc(self) -> int:
+    def calc(self) -> int:
         """ダメージ値を計算します.
 
         丸め誤差を少なくするため、ギリギリまで float で計算し、最後に int で丸めた値を返します。
@@ -142,27 +142,34 @@ class Damage:
         :return: ダメージ値
         """
 
+        # 基本ダメージ
+        val = self._calc_basic()
+        # 属性抵抗
+        val = self._calc_regist(val)
+
+        return int(val)
+
+    def _calc_basic(self) -> int:
+        """基本ダメージ値を計算します.
+
+        :return: 基本ダメージ値
+        """
+
         at_pow = self._attack.power
 
         if self._attack.is_physics():
+            # 物理ダメージ
             df_pow = self._defence.physical_power
         elif self._attack.is_magic():
+            # 魔法ダメージ
             df_pow = self._defence.magical_power
         else:
             raise NotImplementedError
 
-        # 基本ダメージ
-        val = at_pow - df_pow
-        if val <= 0:
-            return 0
+        return max(0, at_pow - df_pow)
 
-        # 属性抵抗
-        val = self._apply_regist(val)
-
-        return int(val)
-
-    def _apply_regist(self, val: float) -> float:
-        """属性抵抗率を適用します.
+    def _calc_regist(self, val: float) -> float:
+        """属性抵抗を適用したダメージ値を計算します.
 
         :param val: ダメージ値
         :return: 適用後のダメージ値

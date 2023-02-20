@@ -62,90 +62,89 @@ class TestDefenceInfo(unittest.TestCase):
 
 class TestDamage(unittest.TestCase):
 
-    def test_physics(self):
-        # 威力10、無属性の物理攻撃
+    def test_init(self):
+        at = AttackInfo(0)
+        df = DefenceInfo(0, 0)
+        dmg = Damage(at, df)
+        self.assertEqual(at, dmg._attack)
+        self.assertEqual(df, dmg._defence)
+        self.assertEqual(0, dmg.value)
+
+    def test_calc(self):
+        at = AttackInfo(0)
+        df = DefenceInfo(0, 0)
+        dmg = Damage(at, df)
+
+        with mock.patch.object(dmg, '_calc_basic', return_value=10) as mp_basic:
+            with mock.patch.object(dmg, '_calc_regist') as mp_regist:
+                dmg.calc()
+                mp_regist.assert_called_once_with(10)
+            mp_basic.assert_called_once()
+
+    def test_basic_physics(self):
         at = AttackInfo(
             power=10,
             type_=AttackType.PHYSICS)
 
-        # 物理防御力6
         df = DefenceInfo(
             physics=6,
             magic=4)
 
         dmg = Damage(at, df)
-        self.assertEqual(4, dmg.value)
+        value = dmg._calc_basic()
+        self.assertEqual(4, value)
 
-    def test_physics_attr_match(self):
-        # 威力10、火属性の物理攻撃
+    def test_basic_magic(self):
         at = AttackInfo(
             power=10,
-            type_=AttackType.PHYSICS,
-            attr=Attribute.FIRE)
+            type_=AttackType.MAGIC)
 
-        # 物理防御6、火耐性50%
-        res_dict = {
-            Attribute.FIRE: 0.5,
-        }
         df = DefenceInfo(
             physics=6,
-            magic=4,
-            res_dict=res_dict)
+            magic=4)
 
-        # 耐性が一致しているので、ダメージ軽減
         dmg = Damage(at, df)
-        self.assertEqual(2, dmg.value)
+        value = dmg._calc_basic()
+        self.assertEqual(6, value)
 
-    def test_minus(self):
-        at = AttackInfo(power=10)
+    def test_basic_minus(self):
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.MAGIC)
+
         df = DefenceInfo(
             physics=20,
             magic=20)
 
-        with mock.patch('damage.Damage._apply_regist') as mp_regist:
-            dmg = Damage(at, df)
-            self.assertEqual(0, dmg.value)
-            mp_regist.assert_not_called()
-
-    def test_magic_attr_not_match(self):
-        # 威力10、火属性の魔法攻撃
-        at = AttackInfo(
-            power=10,
-            type_=AttackType.MAGIC,
-            attr=Attribute.FIRE)
-
-        # 魔法防御4、土耐性50%
-        res_dict = {
-            Attribute.EARTH: 0.5,
-        }
-        df = DefenceInfo(
-            physics=6,
-            magic=4,
-            res_dict=res_dict)
-
-        # 耐性が一致しないので軽減なし
         dmg = Damage(at, df)
-        self.assertEqual(6, dmg.value)
+        value = dmg._calc_basic()
+        self.assertEqual(0, value)
 
-    def test_magic_attr_match(self):
-        # 威力10、火属性の魔法攻撃
-        at = AttackInfo(
-            power=10,
-            type_=AttackType.MAGIC,
-            attr=Attribute.FIRE)
+    def test_regist_match(self):
+        at = AttackInfo(0, attr=Attribute.FIRE)
 
-        # 魔法防御4、火耐性50%
         res_dict = {
             Attribute.FIRE: 0.5,
         }
-        df = DefenceInfo(
-            physics=6,
-            magic=4,
-            res_dict=res_dict)
+        df = DefenceInfo(0, 0, res_dict)
 
         # 耐性が一致しているので、ダメージ軽減
         dmg = Damage(at, df)
-        self.assertEqual(3, dmg.value)
+        value = dmg._calc_regist(10)
+        self.assertEqual(5, value)
+
+    def test_regist_not_match(self):
+        at = AttackInfo(0, attr=Attribute.FIRE)
+
+        res_dict = {
+            Attribute.EARTH: 0.5,
+        }
+        df = DefenceInfo(0, 0, res_dict)
+
+        # 耐性が一致しないので軽減なし
+        dmg = Damage(at, df)
+        value = dmg._calc_regist(10)
+        self.assertEqual(10, value)
 
 
 if __name__ == '__main__':
