@@ -3,7 +3,7 @@
 import unittest
 from unittest import mock
 
-from damage import Damage, AttackInfo, DefenceInfo, Attribute, AttackType
+from damage import Damage, AttackInfo, DefenceInfo, Attribute, AttackType, Condition
 
 
 class TestAttackInfo(unittest.TestCase):
@@ -33,6 +33,7 @@ class TestDefenceInfo(unittest.TestCase):
             magic=6)
         self.assertEqual(8, df.physical_power)
         self.assertEqual(6, df.magical_power)
+        self.assertFalse(df.has_condition())
 
     def test_minus(self):
         with self.assertRaises(ValueError):
@@ -58,6 +59,16 @@ class TestDefenceInfo(unittest.TestCase):
         self.assertAlmostEqual(
             1.0,
             df.get_regist(Attribute.WIND))
+
+    def test_conditions(self):
+        df = DefenceInfo(0, 0, conditions=Condition.POISON)
+        self.assertTrue(df.has_condition())
+        self.assertTrue(df.is_condition(Condition.POISON))
+        self.assertFalse(df.is_condition(Condition.SLEEP))
+
+        df = DefenceInfo(0, 0, conditions=Condition.POISON | Condition.SLEEP)
+        self.assertTrue(df.is_condition(Condition.POISON))
+        self.assertTrue(df.is_condition(Condition.SLEEP))
 
 
 class TestDamage(unittest.TestCase):

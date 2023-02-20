@@ -1,6 +1,6 @@
 """ダメージ計算モジュール."""
 
-from enum import Enum, auto
+from enum import Enum, Flag, auto
 
 
 class AttackType(Enum):
@@ -18,6 +18,13 @@ class Attribute(Enum):
     WATER = auto()  # 水
     WIND = auto()  # 風
     EARTH = auto()  # 土
+
+
+class Condition(Flag):
+    """状態異常."""
+
+    POISON = auto()  # 毒
+    SLEEP = auto()  # 眠り
 
 
 class AttackInfo:
@@ -69,13 +76,15 @@ class DefenceInfo:
     :param physics: 物理防御力
     :param magic: 魔法防御力
     :param res_dict: 属性抵抗率の辞書（属性→抵抗率）
+    :param conditions: 状態異常。正常時は None
     """
 
     def __init__(
             self,
             physics: int,
             magic: int,
-            res_dict: dict[Attribute, float] = None) -> None:
+            res_dict: dict[Attribute, float] = None,
+            conditions: Condition = None) -> None:
         if physics < 0:
             raise ValueError
         if magic < 0:
@@ -87,6 +96,7 @@ class DefenceInfo:
             self._res_dict = {}
         else:
             self._res_dict = res_dict
+        self._conditions = conditions
 
     @property
     def physical_power(self) -> int:
@@ -111,6 +121,19 @@ class DefenceInfo:
         if res is None:
             return 1.0
         return res
+
+    def has_condition(self) -> bool:
+        """状態異常を持っているか？"""
+
+        return self._conditions is not None
+
+    def is_condition(self, condition: Condition) -> bool:
+        """指定の状態異常を持っているか？"""
+
+        if self._conditions is None:
+            return False
+        
+        return bool(self._conditions & condition)
 
 
 class Damage:
