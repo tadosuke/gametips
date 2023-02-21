@@ -12,7 +12,7 @@ class TestAttackInfo(unittest.TestCase):
         at = AttackInfo(10)
         self.assertEqual(10, at.power)
         self.assertEqual(Attribute.NONE, at.attribute)
-        self.assertEqual({}, at._cond_mag_dict)
+        self.assertEqual({}, at.condition_magnifications)
         self.assertTrue(at.is_physics())
 
     def test_attr_type(self):
@@ -91,14 +91,18 @@ class TestDamage(unittest.TestCase):
         self.assertEqual(0, dmg.value)
 
     def test_calc(self):
+        """内部関数の呼び出しチェック."""
+
         at = AttackInfo(0)
         df = DefenceInfo(0, 0)
         dmg = Damage(at, df)
 
         with mock.patch.object(dmg, '_calc_basic', return_value=10) as mp_basic:
-            with mock.patch.object(dmg, '_calc_regist') as mp_regist:
-                dmg.calc()
-                mp_regist.assert_called_once_with(10)
+            with mock.patch.object(dmg, '_calc_cond_mag', return_value=20) as mp_cond:
+                with mock.patch.object(dmg, '_calc_regist') as mp_regist:
+                    dmg.calc()
+                    mp_regist.assert_called_once_with(20)
+                mp_cond.assert_called_once_with(10)
             mp_basic.assert_called_once()
 
     def test_basic_physics(self):
@@ -139,6 +143,42 @@ class TestDamage(unittest.TestCase):
         dmg = Damage(at, df)
         value = dmg._calc_basic()
         self.assertEqual(0, value)
+
+    def test_condition_match_single(self):
+        cond_mag_dict = {
+            Condition.POISON: 2.0,
+        }
+        at = AttackInfo(0, cond_mag_dict=cond_mag_dict)
+        df = DefenceInfo(0, 0, conditions=Condition.POISON)
+
+        dmg = Damage(at, df)
+        value = dmg._calc_cond_mag(10)
+        self.assertEqual(20, value)
+
+    def test_condition_match_multi(self):
+        cond_mag_dict = {
+            Condition.POISON: 2.0,
+            Condition.SLEEP: 1.5,
+        }
+        at = AttackInfo(0, cond_mag_dict=cond_mag_dict)
+        conditions = Condition.POISON|Condition.SLEEP
+        df = DefenceInfo(0, 0, conditions=conditions)
+
+        dmg = Damage(at, df)
+        value = dmg._calc_cond_mag(10)
+        self.assertEqual(25, value)
+
+    def test_condition_not_match(self):
+        cond_mag_dict = {
+            Condition.POISON: 2.0,
+        }
+        at = AttackInfo(0, cond_mag_dict=cond_mag_dict)
+        conditions = Condition.SLEEP
+        df = DefenceInfo(0, 0, conditions=conditions)
+
+        dmg = Damage(at, df)
+        value = dmg._calc_cond_mag(10)
+        self.assertEqual(10, value)
 
     def test_regist_match(self):
         at = AttackInfo(0, attr=Attribute.FIRE)

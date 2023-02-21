@@ -72,6 +72,12 @@ class AttackInfo:
 
         return self._attr
 
+    @property
+    def condition_magnifications(self) -> ConditionMagnificationDictType:
+        """状態異常特攻の辞書."""
+
+        return self._cond_mag_dict
+
     def is_physics(self) -> bool:
         """物理攻撃か？"""
 
@@ -83,7 +89,7 @@ class AttackInfo:
         return self._type == AttackType.MAGIC
 
     def get_condition_magnification(self, cond: Condition) -> float:
-        """状態異常特攻の倍率を得ます."""
+        """指定した状態異常特攻の倍率を得ます."""
 
         mag = self._cond_mag_dict.get(cond)
         if mag is None:
@@ -188,12 +194,14 @@ class Damage:
 
         # 基本ダメージ
         val = self._calc_basic()
+        # 状態異常特攻
+        val = self._calc_cond_mag(val)
         # 属性抵抗
         val = self._calc_regist(val)
 
         return int(val)
 
-    def _calc_basic(self) -> int:
+    def _calc_basic(self) -> float:
         """基本ダメージ値を計算します.
 
         :return: 基本ダメージ値
@@ -210,7 +218,28 @@ class Damage:
         else:
             raise NotImplementedError
 
-        return max(0, at_pow - df_pow)
+        return float(max(0, at_pow - df_pow))
+
+    def _calc_cond_mag(self, val: float) -> float:
+        """異状態異常特攻を適用したダメージ値を計算します.
+
+        複数の状態異常と一致する場合は、足し合わせた倍率が適用されます.
+        倍率 1.5 の特攻が３つある場合、2.5倍になります.
+
+        :param val: ダメージ値
+        :return: 適用後のダメージ値
+        """
+
+        matches = []
+        for cond, mag in self._attack.condition_magnifications.items():
+            if self._defence.is_condition(cond):
+                matches.append(mag)
+
+        sum_mag = 1.0
+        for mag in matches:
+            sum_mag += (mag - 1.0)
+
+        return val * sum_mag
 
     def _calc_regist(self, val: float) -> float:
         """属性抵抗を適用したダメージ値を計算します.
