@@ -12,6 +12,7 @@ class TestAttackInfo(unittest.TestCase):
         at = AttackInfo(10)
         self.assertEqual(10, at.power)
         self.assertEqual(Attribute.NONE, at.attribute)
+        self.assertEqual({}, at._cond_mag_dict)
         self.assertTrue(at.is_physics())
 
     def test_attr_type(self):
@@ -23,6 +24,14 @@ class TestAttackInfo(unittest.TestCase):
     def test_minus(self):
         with self.assertRaises(ValueError):
             AttackInfo(-10)
+
+    def test_condition_magnification(self):
+        cond_mag_dict = {
+            Condition.POISON: 2.0,
+        }
+        at = AttackInfo(0, cond_mag_dict=cond_mag_dict)
+        self.assertEqual(2.0, at.get_condition_magnification(Condition.POISON))
+        self.assertEqual(1.0, at.get_condition_magnification(Condition.SLEEP))
 
 
 class TestDefenceInfo(unittest.TestCase):

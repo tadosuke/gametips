@@ -1,4 +1,5 @@
 """ダメージ計算モジュール."""
+from __future__ import annotations
 
 from enum import Enum, Flag, auto
 
@@ -27,6 +28,13 @@ class Condition(Flag):
     SLEEP = auto()  # 眠り
 
 
+# [型エイリアス] 属性耐性の辞書（属性：ダメージ倍率）
+AttributeResistanceDictType = dict[Attribute, float]
+
+# [型エイリアス] 状態異常特攻の辞書（状態異常：ダメージ倍率）
+ConditionMagnificationDictType = dict[Condition, float]
+
+
 class AttackInfo:
     """攻撃情報.
 
@@ -39,13 +47,18 @@ class AttackInfo:
             self,
             power: int,
             type_: AttackType = AttackType.PHYSICS,
-            attr: Attribute = Attribute.NONE) -> None:
+            attr: Attribute = Attribute.NONE,
+            cond_mag_dict: ConditionMagnificationDictType = None) -> None:
         if power < 0:
             raise ValueError
 
         self._power = power
         self._type = type_
         self._attr = attr
+        if cond_mag_dict is not None:
+            self._cond_mag_dict = cond_mag_dict
+        else:
+            self._cond_mag_dict = {}
 
     @property
     def power(self) -> int:
@@ -69,6 +82,14 @@ class AttackInfo:
 
         return self._type == AttackType.MAGIC
 
+    def get_condition_magnification(self, cond: Condition) -> float:
+        """状態異常特攻の倍率を得ます."""
+
+        mag = self._cond_mag_dict.get(cond)
+        if mag is None:
+            return 1.0
+        return mag
+
 
 class DefenceInfo:
     """防御情報.
@@ -83,7 +104,7 @@ class DefenceInfo:
             self,
             physics: int,
             magic: int,
-            res_dict: dict[Attribute, float] = None,
+            res_dict: AttributeResistanceDictType = None,
             conditions: Condition = None) -> None:
         if physics < 0:
             raise ValueError
