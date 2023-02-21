@@ -207,5 +207,80 @@ class TestDamage(unittest.TestCase):
         self.assertEqual(10, value)
 
 
+class TestModule(unittest.TestCase):
+    """各機能を利用したサンプル."""
+
+    def test_case(self):
+        print('【ダメージ計算テスト】')
+
+        print('威力10、物理攻撃 → 物理防御力8')
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.PHYSICS)
+        df = DefenceInfo(
+            physics=8,
+            magic=6)
+        dmg = Damage(at, df)
+        val = dmg.calc()
+        print(f'  {val} のダメージ!')
+
+        print('威力10、火属性魔法攻撃 → 魔法防御力4、耐性なし')
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.MAGIC,
+            attr=Attribute.FIRE)
+        df = DefenceInfo(
+            physics=10,
+            magic=4)
+        dmg = Damage(at, df)
+        val = dmg.calc()
+        print(f'  {val} のダメージ!')
+
+        print('威力10、火属性魔法攻撃 → 魔法防御力4、火耐性50%')
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.MAGIC,
+            attr=Attribute.FIRE)
+        res_dict = {Attribute.FIRE: 0.5}
+        df = DefenceInfo(
+            physics=10,
+            magic=4,
+            res_dict=res_dict)
+        dmg = Damage(at, df)
+        val = dmg.calc()
+        print(f'  {val} のダメージ!')
+
+        print('威力10、物理攻撃、毒特攻2倍 → 物理防御力5、毒')
+        cond_mag_dict = {Condition.POISON: 2.0}
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.PHYSICS,
+            cond_mag_dict=cond_mag_dict)
+        df = DefenceInfo(
+            physics=5,
+            magic=4,
+            conditions=Condition.POISON)
+        dmg = Damage(at, df)
+        val = dmg.calc()
+        print(f'  {val} のダメージ!')
+
+        print('威力10、水属性魔法攻撃、眠り特攻1.5倍 → 魔法防御力2、水耐性75%、眠り')
+        cond_mag_dict = {Condition.SLEEP: 1.5}
+        at = AttackInfo(
+            power=10,
+            type_=AttackType.MAGIC,
+            attr=Attribute.WATER,
+            cond_mag_dict=cond_mag_dict)
+        res_dict = {Attribute.WATER: 0.25}
+        df = DefenceInfo(
+            physics=4,
+            magic=2,
+            res_dict=res_dict,
+            conditions=Condition.SLEEP)
+        dmg = Damage(at, df)
+        val = dmg.calc()
+        print(f'  {val} のダメージ!')
+
+
 if __name__ == '__main__':
     unittest.main()
