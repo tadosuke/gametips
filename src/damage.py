@@ -41,6 +41,7 @@ class AttackInfo:
     :param power: 威力
     :param type_: 攻撃タイプ
     :param attr: 属性
+    :param cond_mag_dict: 状態異常特攻の辞書（状態異常種別:倍率）
     """
 
     def __init__(
