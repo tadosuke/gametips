@@ -177,13 +177,6 @@ class Damage:
             defence: DefenceInfo) -> None:
         self._attack = attack
         self._defence = defence
-        self._value = 0
-
-    @property
-    def value(self) -> int:
-        """ダメージ値."""
-
-        return self._value
 
     def calc(self) -> int:
         """ダメージ値を計算します.

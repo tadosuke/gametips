@@ -88,7 +88,6 @@ class TestDamage(unittest.TestCase):
         dmg = Damage(at, df)
         self.assertEqual(at, dmg._attack)
         self.assertEqual(df, dmg._defence)
-        self.assertEqual(0, dmg.value)
 
     def test_calc(self):
         """内部関数の呼び出しチェック."""
