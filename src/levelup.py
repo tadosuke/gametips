@@ -9,11 +9,13 @@ class Calculator:
 	:param exps: レベルごとの経験値
 	"""
 
-	def __init__(self, exps: tp.Sequence[int]) -> None:
+	def __init__(
+			self,
+			exps: tp.Sequence[int]) -> None:
 		assert exps
 		self._exps = tuple(exps)
 
-	def calc(self, exp) -> int:
+	def calc(self, exp: int) -> int:
 		"""経験値に対応するレベルを計算します.
 
 		:param exp: 経験値
@@ -43,10 +45,15 @@ class Character:
 	:param exp: 初期経験値
 	"""
 
-	def __init__(self, calculator, exp=0) -> None:
+	def __init__(
+			self,
+			calculator: Calculator,
+			exp: int = 0,
+			name: str = '') -> None:
 		assert 0 <= exp
 
 		self._calculator = calculator
+		self._name = name
 		self._exp = exp
 		self._level = 0
 
@@ -59,12 +66,18 @@ class Character:
 		return self._exp
 
 	@property
+	def name(self) -> str:
+		"""名前."""
+
+		return self._name
+
+	@property
 	def level(self) -> int:
 		"""レベル."""
 
 		return self._level
 
-	def add_exp(self, exp) -> int:
+	def add_exp(self, exp: int) -> int:
 		"""経験値を加算します.
 
 		:param exp: 経験値
@@ -86,3 +99,6 @@ class Character:
 		before = self._level
 		self._level = self._calculator.calc(self._exp)
 		return self.level - before
+
+	def __str__(self) -> str:
+		return f'{self.name}: LV={self.level}, EXP={self.exp}'
