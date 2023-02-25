@@ -20,7 +20,7 @@ class TestCondition(unittest.TestCase):
         self.assertFalse(
             cond.has(ConditionId.ATK_UP))
 
-    def test_condition_offset(self):
+    def test_offset(self):
         cond = Condition()
         cond.add(ConditionId.ATK_UP)
         cond.add(ConditionId.ATK_DOWN)
@@ -29,12 +29,27 @@ class TestCondition(unittest.TestCase):
         self.assertFalse(
             cond.has(ConditionId.ATK_DOWN))
 
+    def test_apply_atk(self):
+        c = Condition()
+        atk = c.apply_atk(10)
+        self.assertEqual(10, atk)
+
+        c = Condition()
+        c.add(ConditionId.ATK_UP)
+        atk = c.apply_atk(10)
+        self.assertAlmostEqual(12.5, atk)
+
+        c = Condition()
+        c.add(ConditionId.ATK_DOWN)
+        atk = c.apply_atk(10)
+        self.assertAlmostEqual(7.5, atk)
+
 
 class TestWeapon(unittest.TestCase):
 
     def test_init(self):
         w = Weapon(4)
-        self.assertEqual(4, w.atk)
+        self.assertEqual(4, w._atk)
 
 
 class TestSkillDict(unittest.TestCase):
@@ -132,21 +147,6 @@ class TestCharacter(unittest.TestCase):
         c.equip(w)
         atk = c._calc_atk_weapon(5)
         self.assertEqual(9, atk)
-
-    def test_calc_atk_condition(self):
-        c = Character()
-        atk = c._calc_atk_condition(10)
-        self.assertEqual(10, atk)
-
-        c = Character()
-        c.condition.add(ConditionId.ATK_UP)
-        atk = c._calc_atk_condition(10)
-        self.assertAlmostEqual(12.5, atk)
-
-        c = Character()
-        c.condition.add(ConditionId.ATK_DOWN)
-        atk = c._calc_atk_condition(10)
-        self.assertAlmostEqual(7.5, atk)
 
 
 if __name__ == '__main__':

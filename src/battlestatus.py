@@ -34,6 +34,13 @@ class Condition:
         if both in self._id:
             self._id = None
 
+    def apply_atk(self, atk):
+        if self.has(ConditionId.ATK_UP):
+            atk *= 1.25
+        elif self.has(ConditionId.ATK_DOWN):
+            atk *= 0.75
+        return atk
+
 
 class SkillId(Enum):
     ATK_UP = auto()  # 攻撃力アップ
@@ -128,18 +135,11 @@ class Character:
     def calc_atk(self):
         atk = self._atk
         atk = self._calc_atk_weapon(atk)
-        atk = self._calc_atk_condition(atk)
-        atk = self._skills.apply_atk(atk)
+        atk = self.condition.apply_atk(atk)
+        atk = self.skills.apply_atk(atk)
         return int(atk)
 
     def _calc_atk_weapon(self, atk):
         if self.weapon is not None:
             atk += self.weapon.atk
-        return atk
-
-    def _calc_atk_condition(self, atk):
-        if self.condition.has(ConditionId.ATK_UP):
-            atk *= 1.25
-        elif self.condition.has(ConditionId.ATK_DOWN):
-            atk *= 0.75
         return atk
