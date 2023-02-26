@@ -100,13 +100,13 @@ class Weapon:
     def __init__(self, id_):
         assert _WEAPON_DICT.get(id_)
         self._id = id_
+        self._level = 1
 
     @property
     def id(self):
         return self._id
 
-    @property
-    def atk(self):
+    def get_atk(self):
         return _WEAPON_DICT[self._id]
 
 
@@ -149,5 +149,5 @@ class Character:
 
     def _calc_atk_weapon(self, atk):
         if self.weapon is not None:
-            atk += self.weapon.atk
+            atk += self.weapon.get_atk
         return atk

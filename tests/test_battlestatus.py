@@ -50,11 +50,11 @@ class TestWeapon(unittest.TestCase):
     def test_init(self):
         w = Weapon(WeaponId.COPPER_SWORD)
         self.assertEqual(WeaponId.COPPER_SWORD, w.id)
-        self.assertEqual(5, w.atk)
+        self.assertEqual(5, w.get_atk())
 
         w = Weapon(WeaponId.STEEL_SWORD)
         self.assertEqual(WeaponId.STEEL_SWORD, w.id)
-        self.assertEqual(15, w.atk)
+        self.assertEqual(15, w.get_atk())
 
 
 class TestSkillDict(unittest.TestCase):
