@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from battlestatus import Character, Condition, ConditionId, Weapon, SkillId, Skill, SkillDict
+from battlestatus import Character, Condition, ConditionId, WeaponId, Weapon, SkillId, SkillDict
 
 
 class TestCondition(unittest.TestCase):
@@ -48,8 +48,13 @@ class TestCondition(unittest.TestCase):
 class TestWeapon(unittest.TestCase):
 
     def test_init(self):
-        w = Weapon(4)
-        self.assertEqual(4, w._atk)
+        w = Weapon(WeaponId.COPPER_SWORD)
+        self.assertEqual(WeaponId.COPPER_SWORD, w.id)
+        self.assertEqual(5, w.atk)
+
+        w = Weapon(WeaponId.STEEL_SWORD)
+        self.assertEqual(WeaponId.STEEL_SWORD, w.id)
+        self.assertEqual(15, w.atk)
 
 
 class TestSkillDict(unittest.TestCase):
@@ -81,32 +86,6 @@ class TestSkillDict(unittest.TestCase):
         self.assertEqual(16, sd.apply_atk(10))
 
 
-class TestSkill(unittest.TestCase):
-
-    def test_init(self):
-        s = Skill(SkillId.ATK_UP)
-        self.assertEqual(SkillId.ATK_UP, s.id)
-        self.assertEqual(1, s.level)
-
-    def test_level(self):
-        s = Skill(SkillId.ATK_UP)
-
-        s.set_level(2)
-        self.assertEqual(2, s.level)
-
-        with self.assertRaises(AssertionError):
-            s.set_level(-1)
-
-    def test_apply_atk(self):
-        s = Skill(SkillId.ATK_UP)
-        atk = s.apply_atk(10)
-        self.assertEqual(12, atk)
-
-        s = Skill(SkillId.DEF_UP)
-        atk = s.apply_atk(10)
-        self.assertEqual(10, atk)
-
-
 class TestCharacter(unittest.TestCase):
 
     def test_init(self):
@@ -118,7 +97,7 @@ class TestCharacter(unittest.TestCase):
     def test_equip(self):
         c = Character()
 
-        w = Weapon(4)
+        w = Weapon(WeaponId.COPPER_SWORD)
         c.equip(w)
         self.assertIs(w, c.weapon)
 
@@ -143,10 +122,16 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(5, atk)
 
         c = Character()
-        w = Weapon(4)
+        w = Weapon(WeaponId.COPPER_SWORD)
         c.equip(w)
         atk = c._calc_atk_weapon(5)
-        self.assertEqual(9, atk)
+        self.assertEqual(10, atk)
+
+        c = Character()
+        w = Weapon(WeaponId.IRON_SWORD)
+        c.equip(w)
+        atk = c._calc_atk_weapon(5)
+        self.assertEqual(15, atk)
 
 
 if __name__ == '__main__':

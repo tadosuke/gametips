@@ -2,11 +2,14 @@ from enum import Flag, Enum, auto
 
 
 class ConditionId(Flag):
+    """状態異常 ID."""
+
     ATK_UP = auto()  # 攻撃力アップ
     ATK_DOWN = auto()  # 攻撃力ダウン
 
 
 class Condition:
+    """状態異常."""
 
     def __init__(self, id_=None):
         self._id = id_
@@ -43,11 +46,14 @@ class Condition:
 
 
 class SkillId(Enum):
+    """スキル ID."""
+
     ATK_UP = auto()  # 攻撃力アップ
     DEF_UP = auto()  # 防御力アップ
 
 
 class SkillDict:
+    """スキル辞書."""
 
     def __init__(self):
         self._dict: dict[SkillId, int] = {}
@@ -69,44 +75,46 @@ class SkillDict:
         return atk
 
 
-class Skill:
+class WeaponId:
+    """武器 ID."""
 
-    def __init__(self, id_, level=1):
-        assert 1 <= level
+    COPPER_SWORD = auto()  # 銅の剣
+    IRON_SWORD = auto()  # 鉄の剣
+    STEEL_SWORD = auto()  # 鋼の剣
 
+
+# 武器の能力辞書
+_WEAPON_DICT = {
+    WeaponId.COPPER_SWORD: 5,
+    WeaponId.IRON_SWORD: 10,
+    WeaponId.STEEL_SWORD: 15,
+}
+
+
+class Weapon:
+    """武器.
+
+    :param id_: 武器 ID
+    """
+
+    def __init__(self, id_):
+        assert _WEAPON_DICT.get(id_)
         self._id = id_
-        self._level = level
 
     @property
     def id(self):
         return self._id
 
     @property
-    def level(self):
-        return self._level
-
-    def set_level(self, level):
-        assert 1 <= level
-
-        self._level = level
-
-    def apply_atk(self, atk):
-        if self.id == SkillId.ATK_UP:
-            atk += self.level * 2
-        return atk
-
-
-class Weapon:
-
-    def __init__(self, atk):
-        self._atk = atk
-
-    @property
     def atk(self):
-        return self._atk
+        return _WEAPON_DICT[self._id]
 
 
 class Character:
+    """キャラクター.
+
+    :param atk: 攻撃力
+    """
 
     def __init__(self, atk=10):
         self._atk = atk
