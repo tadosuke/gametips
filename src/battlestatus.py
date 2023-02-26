@@ -112,6 +112,11 @@ class Weapon:
         """武器レベル."""
         return self._level
 
+    def set_level(self, level):
+        """武器レベルを設定する."""
+        assert 1 <= level
+        self._level = level
+
     def calc_atk(self):
         """武器の攻撃力を計算する."""
         atk = self._get_base_atk()
@@ -129,11 +134,6 @@ class Weapon:
         base = self._get_base_atk()
         ratio = float(self._level-1.0) / 5.0
         return base * ratio
-
-    def set_level(self, level):
-        """武器レベルを設定する."""
-        assert 1 <= level
-        self._level = level
 
 
 class Character:
