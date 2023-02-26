@@ -50,11 +50,22 @@ class TestWeapon(unittest.TestCase):
     def test_init(self):
         w = Weapon(WeaponId.COPPER_SWORD)
         self.assertEqual(WeaponId.COPPER_SWORD, w.id)
-        self.assertEqual(5, w.get_atk())
+        self.assertEqual(5, w.calc_atk())
+        self.assertEqual(1, w.level)
 
         w = Weapon(WeaponId.STEEL_SWORD)
         self.assertEqual(WeaponId.STEEL_SWORD, w.id)
-        self.assertEqual(15, w.get_atk())
+        self.assertEqual(15, w.calc_atk())
+
+    def test_level(self):
+        w = Weapon(WeaponId.IRON_SWORD)
+        w.set_level(2)
+        self.assertAlmostEqual(2.0, w._calc_level_atk())
+        w.set_level(3)
+        self.assertAlmostEqual(4.0, w._calc_level_atk())
+
+        with self.assertRaises(AssertionError):
+            w.set_level(-1)
 
 
 class TestSkillDict(unittest.TestCase):
@@ -132,6 +143,13 @@ class TestCharacter(unittest.TestCase):
         c.equip(w)
         atk = c._calc_atk_weapon(5)
         self.assertEqual(15, atk)
+
+        c = Character()
+        w = Weapon(WeaponId.IRON_SWORD)
+        w.set_level(2)
+        c.equip(w)
+        atk = c._calc_atk_weapon(5)
+        self.assertEqual(17, atk)
 
 
 if __name__ == '__main__':

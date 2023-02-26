@@ -104,10 +104,36 @@ class Weapon:
 
     @property
     def id(self):
+        """武器 ID."""
         return self._id
 
-    def get_atk(self):
+    @property
+    def level(self):
+        """武器レベル."""
+        return self._level
+
+    def calc_atk(self):
+        """武器の攻撃力を計算する."""
+        atk = self._get_base_atk()
+        atk += self._calc_level_atk()
+        return int(atk)
+
+    def _get_base_atk(self):
+        """基本攻撃力を得る."""
         return _WEAPON_DICT[self._id]
+
+    def _calc_level_atk(self):
+        """レベルによる補正値を計算する."""
+        if self._level == 1:
+            return 0
+        base = self._get_base_atk()
+        ratio = float(self._level-1.0) / 5.0
+        return base * ratio
+
+    def set_level(self, level):
+        """武器レベルを設定する."""
+        assert 1 <= level
+        self._level = level
 
 
 class Character:
@@ -149,5 +175,5 @@ class Character:
 
     def _calc_atk_weapon(self, atk):
         if self.weapon is not None:
-            atk += self.weapon.get_atk
+            atk += self.weapon.calc_atk()
         return atk
