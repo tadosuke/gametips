@@ -1,3 +1,5 @@
+"""battlestatus モジュールのテスト."""
+
 import unittest
 from unittest import mock
 
@@ -155,6 +157,64 @@ class TestCharacter(unittest.TestCase):
         c.equip(w)
         atk = c._calc_atk_weapon(5)
         self.assertEqual(17, atk)
+
+
+class TestBattleStatus(unittest.TestCase):
+    """各機能を利用したサンプル."""
+
+    def test_case(self):
+        print('')
+        print('[BattleStatus]')
+
+        chara = Character(10)
+        print(f'力={chara._atk}')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        w = Weapon(WeaponId.COPPER_SWORD, 1)
+        chara.equip(w)
+        print(f'力={chara._atk}, 武器={w.id.name}(Lv.{w.level})')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        w = Weapon(WeaponId.COPPER_SWORD, 5)
+        chara.equip(w)
+        print(f'力={chara._atk}, 武器={w.id.name}(Lv.{w.level})')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        chara.condition.add(ConditionId.ATK_UP)
+        print(f'力={chara._atk}, 状態={ConditionId.ATK_UP.name}')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        chara.condition.add(ConditionId.ATK_DOWN)
+        print(f'力={chara._atk}, 状態={ConditionId.ATK_DOWN.name}')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        skill_level = 1
+        chara.skills.add(SkillId.ATK_UP, skill_level)
+        print(f'力={chara._atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        skill_level = 4
+        chara.skills.add(SkillId.ATK_UP, skill_level)
+        print(f'力={chara._atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
+
+        chara = Character(10)
+        w = Weapon(WeaponId.STEEL_SWORD, 5)
+        chara.equip(w)
+        chara.condition.add(ConditionId.ATK_UP)
+        skill_level = 5
+        chara.skills.add(SkillId.ATK_UP, skill_level)
+        print(f'力={chara._atk}, '
+              f'武器={w.id.name}(Lv.{w.level}), ' 
+              f'スキル={SkillId.ATK_UP.name}(Lv.{skill_level}), '
+              f'状態={ConditionId.ATK_UP.name}')
+        print(f'　→ 総攻撃力={chara.calc_atk()}')
 
 
 if __name__ == '__main__':

@@ -1,3 +1,8 @@
+"""戦闘ステータス計算.
+
+キャラクターの基本能力値、武器、スキル、状態異常などを加味した攻撃力を計算するサンプルです.
+"""
+
 from enum import Flag, Enum, auto
 
 
@@ -117,7 +122,7 @@ class SkillDict:
         return atk
 
 
-class WeaponId:
+class WeaponId(Enum):
     """武器 ID."""
 
     COPPER_SWORD = auto()  # 銅の剣
@@ -140,7 +145,7 @@ class Weapon:
     :param level: 武器レベル
     """
 
-    def __init__(self, id_, level=1) -> None:
+    def __init__(self, id_: WeaponId, level: int = 1) -> None:
         assert _WEAPON_DICT.get(id_)
         assert 1 <= level
 
