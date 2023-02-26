@@ -9,35 +9,57 @@ class ConditionId(Flag):
 
 
 class Condition:
-    """状態異常."""
+    """状態異常.
 
-    def __init__(self, id_=None):
+    :param id_: 状態異常 ID
+    """
+
+    def __init__(self, id_: ConditionId = None) -> None:
         self._id = id_
 
-    def has(self, id_):
+    def has(self, id_: ConditionId) -> bool:
+        """状態異常を持っているか？
+
+        :param id_: 状態異常 ID
+        :return: 状態異常を持っていたら True
+        """
         if self._id is None:
             return False
         return id_ in self._id
 
-    def add(self, id_):
+    def add(self, id_: ConditionId) -> None:
+        """状態異常を付与します.
+
+        :param id_: 状態異常 ID
+        """
         if self._id is None:
             self._id = id_
         else:
             self._id |= id_
         self._offset()
 
-    def remove(self, id_):
+    def remove(self, id_: ConditionId) -> None:
+        """状態異常を解除します.
+
+        :param id_: 状態異常 ID
+        """
         if self._id is None:
             return
         self._id &= ~id_
         self._offset()
 
-    def _offset(self):
+    def _offset(self) -> None:
+        """同時に付与できない状態異常を相殺します."""
         both = ConditionId.ATK_UP | ConditionId.ATK_DOWN
         if both in self._id:
             self._id = None
 
-    def apply_atk(self, atk):
+    def apply_atk(self, atk: float) -> float:
+        """状態異常を攻撃力に適用します.
+
+        :param atk: 適用前の攻撃力
+        :return: 適用後の攻撃力
+        """
         if self.has(ConditionId.ATK_UP):
             atk *= 1.25
         elif self.has(ConditionId.ATK_DOWN):
@@ -55,21 +77,41 @@ class SkillId(Enum):
 class SkillDict:
     """スキル辞書."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._dict: dict[SkillId, int] = {}
 
-    def add(self, skill_id, level=1):
+    def add(self, skill_id: SkillId, level: int = 1) -> None:
+        """スキルを追加します.
+
+        :param skill_id: スキル ID
+        :param level: スキルレベル
+        """
         self._dict[skill_id] = level
 
-    def has(self, skill_id):
+    def has(self, skill_id: SkillId) -> bool:
+        """指定のスキルを持っているか？
+
+        :param skill_id: スキル ID
+        :return: 持っていたら True
+        """
         return skill_id in self._dict
 
-    def get_level(self, skill_id):
+    def get_level(self, skill_id: SkillId) -> int:
+        """スキルレベルを得ます.
+
+        :param skill_id: スキル ID
+        :return: スキルレベル
+        """
         if not self.has(skill_id):
             return 0
         return self._dict[skill_id]
 
-    def apply_atk(self, atk):
+    def apply_atk(self, atk: float) -> float:
+        """スキルを攻撃力に適用します.
+
+        :param atk: 適用前の攻撃力
+        :return: 適用後の攻撃力
+        """
         if self.has(SkillId.ATK_UP):
             atk += self.get_level(SkillId.ATK_UP) * 2
         return atk
@@ -95,44 +137,59 @@ class Weapon:
     """武器.
 
     :param id_: 武器 ID
+    :param level: 武器レベル
     """
 
-    def __init__(self, id_):
+    def __init__(self, id_, level=1) -> None:
         assert _WEAPON_DICT.get(id_)
+        assert 1 <= level
+
         self._id = id_
-        self._level = 1
+        self._level = level
 
     @property
-    def id(self):
+    def id(self) -> WeaponId:
         """武器 ID."""
         return self._id
 
     @property
-    def level(self):
+    def level(self) -> int:
         """武器レベル."""
         return self._level
 
-    def set_level(self, level):
-        """武器レベルを設定する."""
+    def set_level(self, level: int) -> None:
+        """武器レベルを設定します.
+
+        :param level: 武器レベル
+        """
         assert 1 <= level
         self._level = level
 
-    def calc_atk(self):
-        """武器の攻撃力を計算する."""
+    def calc_atk(self) -> int:
+        """武器の攻撃力を計算します.
+
+        :return: 攻撃力
+        """
         atk = self._get_base_atk()
         atk += self._calc_level_atk()
         return int(atk)
 
-    def _get_base_atk(self):
-        """基本攻撃力を得る."""
+    def _get_base_atk(self) -> int:
+        """武器の基本攻撃力を得ます.
+
+        :return: 基本攻撃力
+        """
         return _WEAPON_DICT[self._id]
 
-    def _calc_level_atk(self):
-        """レベルによる補正値を計算する."""
+    def _calc_level_atk(self) -> float:
+        """武器レベルによる補正値を計算します.
+
+        :return: 補正値
+        """
         if self._level == 1:
             return 0
         base = self._get_base_atk()
-        ratio = float(self._level-1.0) / 5.0
+        ratio = float(self._level - 1.0) / 5.0
         return base * ratio
 
 
@@ -142,38 +199,55 @@ class Character:
     :param atk: 攻撃力
     """
 
-    def __init__(self, atk=10):
+    def __init__(self, atk=10) -> None:
         self._atk = atk
         self._weapon = None
         self._condition = Condition()
         self._skills = SkillDict()
 
     @property
-    def condition(self):
+    def condition(self) -> Condition:
+        """状態異常."""
         return self._condition
 
-    def equip(self, weapon):
+    def equip(self, weapon: Weapon) -> None:
+        """武器を装備します.
+
+        :param weapon: 武器
+        """
         self._weapon = weapon
 
-    def unequip(self):
+    def unequip(self) -> None:
+        """武器の装備を解除します."""
         self._weapon = None
 
     @property
-    def weapon(self):
+    def weapon(self) -> Weapon:
+        """武器."""
         return self._weapon
 
     @property
-    def skills(self):
+    def skills(self) -> SkillDict:
+        """習得しているスキル."""
         return self._skills
 
-    def calc_atk(self):
+    def calc_atk(self) -> int:
+        """武器・スキルなどを加味した攻撃力を計算します.
+
+        :return: 攻撃力
+        """
         atk = self._atk
         atk = self._calc_atk_weapon(atk)
         atk = self.condition.apply_atk(atk)
         atk = self.skills.apply_atk(atk)
         return int(atk)
 
-    def _calc_atk_weapon(self, atk):
+    def _calc_atk_weapon(self, atk: int) -> int:
+        """武器の攻撃力を適用します.
+
+        :param atk: 適用前の攻撃力
+        :return: 適用後の攻撃力
+        """
         if self.weapon is not None:
             atk += self.weapon.calc_atk()
         return atk
