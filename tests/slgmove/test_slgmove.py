@@ -2,8 +2,8 @@
 
 import unittest
 
-from position import GridPosition
-from slgmove import Unit, Map, MoveMap, Ground
+from slgmove.position import GridPosition
+from slgmove.slgmove import Unit, Map, MoveMap, Ground
 
 _GROUND_TYPES1 = [
     [1, 1, 1, 1, 1],

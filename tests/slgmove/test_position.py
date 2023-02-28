@@ -2,7 +2,7 @@
 
 import unittest
 
-from position import GridPosition
+from slgmove.position import GridPosition
 
 
 class TestGridPosition(unittest.TestCase):
