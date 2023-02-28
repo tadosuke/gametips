@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import typing as tp
 
-from position import GridPosition
+from slgmove.position import GridPosition
 
 
 class Unit:

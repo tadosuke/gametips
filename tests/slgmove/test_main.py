@@ -3,7 +3,7 @@
 import unittest
 
 from slgmove.position import GridPosition
-from slgmove.slgmove import Unit, Map, MoveMap, Ground
+from slgmove.main import Unit, Map, MoveMap, Ground
 
 _GROUND_TYPES1 = [
     [1, 1, 1, 1, 1],
