@@ -1,11 +1,11 @@
-"""turnbattle モジュールのテスト."""
+"""turnbattle.main モジュールのテスト."""
 
 import unittest
 from unittest import mock
 
-import turnbattle
-from turnbattle import Character, Action, Battle, Turn
-from logger import ListLogger, NullLogger
+import turnbattle.main
+from turnbattle.main import Character, Action, Battle, Turn
+from turnbattle.logger import ListLogger, NullLogger
 
 
 class TestCharacter(unittest.TestCase):
@@ -97,10 +97,10 @@ class TestTurn(unittest.TestCase):
 class TestBattle(unittest.TestCase):
 	
 	def setUp(self):
-		turnbattle.log = ListLogger()
+		turnbattle.main.log = ListLogger()
 		
 	def tearDown(self):
-		turnbattle.log = NullLogger()
+		turnbattle.main.log = NullLogger()
 	
 	def test_two(self):
 		c1 = Character(50, 20, 20, 'Hoge')

@@ -2,7 +2,7 @@
 
 import unittest
 
-from logger import ListLogger, NullLogger
+from turnbattle.logger import ListLogger, NullLogger
 
 
 class TestLogger(unittest.TestCase):

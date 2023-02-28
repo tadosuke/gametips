@@ -4,9 +4,9 @@ from __future__ import annotations
 import typing as tp
 from collections.abc import Collection
 
-import logger
+from turnbattle.logger import NullLogger
 
-log = logger.NullLogger()
+log = NullLogger()
 
 
 class Character:
