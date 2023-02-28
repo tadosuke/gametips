@@ -2,7 +2,7 @@
 
 import unittest
 
-from levelup import Calculator, Character
+from levelup.levelup import Calculator, Character
 
 # レベルごとの累積経験値
 _EXP_TABLE = (

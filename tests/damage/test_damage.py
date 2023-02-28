@@ -3,7 +3,7 @@
 import unittest
 from unittest import mock
 
-from damage import Damage, AttackInfo, DefenceInfo, Attribute, AttackType, Condition
+from damage.damage import Damage, AttackInfo, DefenceInfo, Attribute, AttackType, Condition
 
 
 class TestAttackInfo(unittest.TestCase):

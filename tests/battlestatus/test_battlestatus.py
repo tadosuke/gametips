@@ -1,9 +1,8 @@
 """battlestatus モジュールのテスト."""
 
 import unittest
-from unittest import mock
 
-from battlestatus import Character, Condition, ConditionId, WeaponId, Weapon, SkillId, SkillDict
+from battlestatus.battlestatus import Character, Condition, ConditionId, WeaponId, Weapon, SkillId, SkillDict
 
 
 class TestCondition(unittest.TestCase):
