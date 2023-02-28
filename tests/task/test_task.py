@@ -3,7 +3,7 @@
 import unittest
 from unittest import mock
 
-from task import TaskBase
+from task.task import TaskBase
 
 
 # 実行順を確認するための変数
