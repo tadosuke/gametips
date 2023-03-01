@@ -2,49 +2,9 @@
 
 import unittest
 
-from battlestatus.main import Character, Condition, ConditionId, SkillId, SkillDict
+from battlestatus.condition import ConditionId, Condition
+from battlestatus.main import Character, SkillId, SkillDict
 from battlestatus.weapon import WeaponId, Weapon
-
-
-class TestCondition(unittest.TestCase):
-
-    def test_init(self):
-        cond = Condition()
-        self.assertIsNone(cond._id)
-
-    def test_add_remove(self):
-        cond = Condition()
-        cond.add(ConditionId.ATK_UP)
-        self.assertTrue(
-            cond.has(ConditionId.ATK_UP))
-
-        cond.remove(ConditionId.ATK_UP)
-        self.assertFalse(
-            cond.has(ConditionId.ATK_UP))
-
-    def test_offset(self):
-        cond = Condition()
-        cond.add(ConditionId.ATK_UP)
-        cond.add(ConditionId.ATK_DOWN)
-        self.assertFalse(
-            cond.has(ConditionId.ATK_UP))
-        self.assertFalse(
-            cond.has(ConditionId.ATK_DOWN))
-
-    def test_apply_atk(self):
-        c = Condition()
-        atk = c.apply_atk(10)
-        self.assertEqual(10, atk)
-
-        c = Condition()
-        c.add(ConditionId.ATK_UP)
-        atk = c.apply_atk(10)
-        self.assertAlmostEqual(12.5, atk)
-
-        c = Condition()
-        c.add(ConditionId.ATK_DOWN)
-        atk = c.apply_atk(10)
-        self.assertAlmostEqual(7.5, atk)
 
 
 class TestSkillDict(unittest.TestCase):
@@ -183,7 +143,7 @@ class TestBattleStatus(unittest.TestCase):
         skill_level = 5
         chara.skills.add(SkillId.ATK_UP, skill_level)
         print(f'力={chara._atk}, '
-              f'武器={w.id.name}(Lv.{w.level}), ' 
+              f'武器={w.id.name}(Lv.{w.level}), '
               f'スキル={SkillId.ATK_UP.name}(Lv.{skill_level}), '
               f'状態={ConditionId.ATK_UP.name}')
         print(f'　→ 総攻撃力={chara.calc_atk()}')
