@@ -1,68 +1,66 @@
-"""戦闘ステータス計算.
+"""battlestatus モジュールの使用サンプル."""
 
-キャラクターの基本能力値、武器、スキル、状態異常などを加味した攻撃力を計算するサンプルです.
-"""
-
-from battlestatus.condition import Condition
-from battlestatus.skill import SkillDict
-from battlestatus.weapon import Weapon
+from battlestatus.character import Character
+from battlestatus.condition import ConditionId
+from battlestatus.skill import SkillId
+from battlestatus.weapon import Weapon, WeaponId
 
 
-class Character:
-    """キャラクター.
+def main():
+    """."""
+    print('')
+    print('[BattleStatus]')
 
-    :param atk: 攻撃力
-    """
+    chara = Character(10)
+    print(f'力={chara.atk}')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    def __init__(self, atk=10) -> None:
-        self._atk = atk
-        self._weapon = None
-        self._condition = Condition()
-        self._skills = SkillDict()
+    chara = Character(10)
+    w = Weapon(WeaponId.COPPER_SWORD, 1)
+    chara.equip(w)
+    print(f'力={chara.atk}, 武器={w.id.name}(Lv.{w.level})')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    @property
-    def condition(self) -> Condition:
-        """状態異常."""
-        return self._condition
+    chara = Character(10)
+    w = Weapon(WeaponId.COPPER_SWORD, 5)
+    chara.equip(w)
+    print(f'力={chara.atk}, 武器={w.id.name}(Lv.{w.level})')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    def equip(self, weapon: Weapon) -> None:
-        """武器を装備します.
+    chara = Character(10)
+    chara.condition.add(ConditionId.ATK_UP)
+    print(f'力={chara.atk}, 状態={ConditionId.ATK_UP.name}')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-        :param weapon: 武器
-        """
-        self._weapon = weapon
+    chara = Character(10)
+    chara.condition.add(ConditionId.ATK_DOWN)
+    print(f'力={chara.atk}, 状態={ConditionId.ATK_DOWN.name}')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    def unequip(self) -> None:
-        """武器の装備を解除します."""
-        self._weapon = None
+    chara = Character(10)
+    skill_level = 1
+    chara.skills.add(SkillId.ATK_UP, skill_level)
+    print(f'力={chara.atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    @property
-    def weapon(self) -> Weapon:
-        """武器."""
-        return self._weapon
+    chara = Character(10)
+    skill_level = 4
+    chara.skills.add(SkillId.ATK_UP, skill_level)
+    print(f'力={chara.atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    @property
-    def skills(self) -> SkillDict:
-        """習得しているスキル."""
-        return self._skills
+    chara = Character(10)
+    w = Weapon(WeaponId.STEEL_SWORD, 5)
+    chara.equip(w)
+    chara.condition.add(ConditionId.ATK_UP)
+    skill_level = 5
+    chara.skills.add(SkillId.ATK_UP, skill_level)
+    print(f'力={chara.atk}, '
+          f'武器={w.id.name}(Lv.{w.level}), '
+          f'スキル={SkillId.ATK_UP.name}(Lv.{skill_level}), '
+          f'状態={ConditionId.ATK_UP.name}')
+    print(f'　→ 総攻撃力={chara.calc_atk()}')
 
-    def calc_atk(self) -> int:
-        """武器・スキルなどを加味した攻撃力を計算します.
 
-        :return: 攻撃力
-        """
-        atk = self._atk
-        atk = self._calc_atk_weapon(atk)
-        atk = self.condition.apply_atk(atk)
-        atk = self.skills.apply_atk(atk)
-        return int(atk)
-
-    def _calc_atk_weapon(self, atk: int) -> int:
-        """武器の攻撃力を適用します.
-
-        :param atk: 適用前の攻撃力
-        :return: 適用後の攻撃力
-        """
-        if self.weapon is not None:
-            atk += self.weapon.calc_atk()
-        return atk
+if __name__ == '__main__':
+    main()
