@@ -1,9 +1,8 @@
 """parameter モジュールのテスト."""
 
 import unittest
-from enum import Enum, auto
 
-from battlestatus.parameter import Parameter, ParameterValue
+from battlestatus.parameter import Parameter, ParameterValue, ParameterId
 
 
 class TestParameterValue(unittest.TestCase):
@@ -20,13 +19,13 @@ class TestParameter(unittest.TestCase):
 
     def test_init(self):
         param = Parameter()
-        self.assertEqual(0, param.attack.value)
-        self.assertEqual(0, param.defence.value)
-        self.assertEqual(0, param.mattack.value)
-        self.assertEqual(0, param.mdefence.value)
-        self.assertEqual(0, param.dexterity.value)
-        self.assertEqual(0, param.speed.value)
-        self.assertEqual(0, param.luck.value)
+        self.assertEqual(0, param.get(ParameterId.ATK).value)
+        self.assertEqual(0, param.get(ParameterId.DEF).value)
+        self.assertEqual(0, param.get(ParameterId.MAT).value)
+        self.assertEqual(0, param.get(ParameterId.MDF).value)
+        self.assertEqual(0, param.get(ParameterId.DEX).value)
+        self.assertEqual(0, param.get(ParameterId.SPD).value)
+        self.assertEqual(0, param.get(ParameterId.LUK).value)
 
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 """戦闘パラメーター."""
 from __future__ import annotations
 
+from enum import Enum, auto
+
 
 class ParameterValue:
     """パラメーターの値.
@@ -19,49 +21,27 @@ class ParameterValue:
         return self._value
 
 
+class ParameterId(Enum):
+    """パラメーター ID."""
+
+    ATK = auto()
+    DEF = auto()
+    MAT = auto()
+    MDF = auto()
+    DEX = auto()
+    SPD = auto()
+    LUK = auto()
+
+
 class Parameter:
     """戦闘パラメーター."""
 
     def __init__(self):
-        self._atk = ParameterValue(0)
-        self._def = ParameterValue(0)
-        self._mat = ParameterValue(0)
-        self._mdf = ParameterValue(0)
-        self._dex = ParameterValue(0)
-        self._spd = ParameterValue(0)
-        self._luk = ParameterValue(0)
+        self._values = {i: ParameterValue(0) for i in ParameterId}
 
-    @property
-    def attack(self) -> ParameterValue:
-        """攻撃力."""
-        return self._atk
+    def get(self, id_: ParameterId) -> ParameterValue:
+        """パラメーターを取得します.
 
-    @property
-    def defence(self) -> ParameterValue:
-        """防御力."""
-        return self._def
-
-    @property
-    def mattack(self) -> ParameterValue:
-        """魔法攻撃力."""
-        return self._mat
-
-    @property
-    def mdefence(self) -> ParameterValue:
-        """魔法防御力."""
-        return self._mdf
-
-    @property
-    def dexterity(self) -> ParameterValue:
-        """器用さ."""
-        return self._dex
-
-    @property
-    def speed(self) -> ParameterValue:
-        """素早さ."""
-        return self._spd
-
-    @property
-    def luck(self) -> ParameterValue:
-        """運."""
-        return self._luk
+        :return: パラメーター
+        """
+        return self._values[id_]
