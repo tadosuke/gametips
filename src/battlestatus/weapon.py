@@ -1,42 +1,75 @@
 """武器."""
+from __future__ import annotations
 
-from enum import Enum, auto
-
-
-class WeaponId(Enum):
-    """武器 ID."""
-
-    COPPER_SWORD = auto()  # 銅の剣
-    IRON_SWORD = auto()  # 鉄の剣
-    STEEL_SWORD = auto()  # 鋼の剣
+import typing as tp
+from dataclasses import dataclass
 
 
-# 武器の能力辞書
-_WEAPON_DICT = {
-    WeaponId.COPPER_SWORD: 5,
-    WeaponId.IRON_SWORD: 10,
-    WeaponId.STEEL_SWORD: 15,
-}
+@dataclass
+class BaseParameter:
+    """武器の基礎パラメーター."""
+
+    name: str = ''
+    atk: int = 0
+
+
+class BaseParameterDict:
+    """武器の辞書.
+
+    :param dict_: 辞書の元データ
+    """
+
+    def __init__(self, dict_: dict[tp.Hashable, BaseParameter]) -> None:
+        self._dict: dict[tp.Hashable, BaseParameter] = dict_
+
+    def get(self, id_: tp.Hashable) -> tp.Optional[BaseParameter]:
+        param = self._dict.get(id_)
+        if param is None:
+            return None
+        param.id = id_
+        return param
+
+
+class WeaponFactory:
+    """武器生成クラス."""
+
+    def __init__(self, base_param_dict: BaseParameterDict) -> None:
+        self._base_param_dict = base_param_dict
+
+    def create(
+            self,
+            id_: tp.Hashable,
+            level: int = 1) -> tp.Optional[Weapon]:
+        """武器を生成します.
+
+        :param id_: 武器 ID
+        :param level: 武器レベル
+        :return: 武器。生成に失敗した場合は None
+        """
+        base_param = self._base_param_dict.get(id_)
+        if base_param is None:
+            return None
+
+        weapon = Weapon(base_param)
+        weapon.set_level(level)
+
+        return weapon
 
 
 class Weapon:
     """武器.
 
-    :param id_: 武器 ID
-    :param level: 武器レベル
+    :param base_param: 基本パラメータ
     """
 
-    def __init__(self, id_: WeaponId, level: int = 1) -> None:
-        assert _WEAPON_DICT.get(id_)
-        assert 1 <= level
-
-        self._id = id_
-        self._level = level
+    def __init__(self, base_param: BaseParameter) -> None:
+        self._base_param = base_param
+        self._level = 1
 
     @property
-    def id(self) -> WeaponId:
-        """武器 ID."""
-        return self._id
+    def name(self) -> str:
+        """名前."""
+        return self._base_param.name
 
     @property
     def level(self) -> int:
@@ -56,16 +89,9 @@ class Weapon:
 
         :return: 攻撃力
         """
-        atk = self._get_base_atk()
+        atk = self._base_param.atk
         atk += self._calc_level_atk()
         return int(atk)
-
-    def _get_base_atk(self) -> int:
-        """武器の基本攻撃力を得ます.
-
-        :return: 基本攻撃力
-        """
-        return _WEAPON_DICT[self._id]
 
     def _calc_level_atk(self) -> float:
         """武器レベルによる補正値を計算します.
@@ -74,6 +100,9 @@ class Weapon:
         """
         if self._level == 1:
             return 0
-        base = self._get_base_atk()
+        base = self._base_param.atk
         ratio = float(self._level - 1.0) / 5.0
         return base * ratio
+
+
+

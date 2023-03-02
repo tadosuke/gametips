@@ -1,29 +1,75 @@
 """weapon モジュールのテスト."""
 
 import unittest
+from enum import Enum, auto
 
-from battlestatus.weapon import Weapon, WeaponId
+from battlestatus.weapon import Weapon, BaseParameter, BaseParameterDict, WeaponFactory
+
+
+class WeaponId(Enum):
+    """武器 ID."""
+
+    COPPER_SWORD = auto()  # 銅の剣
+    IRON_SWORD = auto()  # 鉄の剣
+    STEEL_SWORD = auto()  # 鋼の剣
+
+
+# 武器の能力辞書
+_BASE_PARAMETER_DICT = {
+    WeaponId.COPPER_SWORD:
+        BaseParameter(name='銅の剣', atk=5),
+    WeaponId.IRON_SWORD:
+        BaseParameter(name='鉄の剣', atk=10),
+    WeaponId.STEEL_SWORD:
+        BaseParameter(name='鋼の剣', atk=15),
+}
+
+
+class TestBaseParameterDict(unittest.TestCase):
+
+    def test_init(self):
+        wdict = BaseParameterDict(_BASE_PARAMETER_DICT)
+        param = wdict.get(WeaponId.COPPER_SWORD)
+        self.assertEqual('銅の剣', param.name)
+        self.assertEqual(5, param.atk)
+
+        param = wdict.get(-1)
+        self.assertIsNone(param)
+
+
+class TestWeaponFactory(unittest.TestCase):
+
+    def setUp(self) -> None:
+        self.dict = BaseParameterDict(_BASE_PARAMETER_DICT)
+        self.factory = WeaponFactory(self.dict)
+
+    def test_init(self):
+        self.assertIs(self.dict, self.factory._base_param_dict)
+
+    def test_create(self):
+        w = self.factory.create(WeaponId.COPPER_SWORD, 2)
+        self.assertEqual(2, w.level)
 
 
 class TestWeapon(unittest.TestCase):
 
     def test_init(self):
-        w = Weapon(WeaponId.COPPER_SWORD)
-        self.assertEqual(WeaponId.COPPER_SWORD, w.id)
-        self.assertEqual(1, w.level)
+        param = _BASE_PARAMETER_DICT[WeaponId.COPPER_SWORD]
+        param.id = WeaponId.COPPER_SWORD
+        w = Weapon(param)
+        self.assertIs(param, w._base_param)
+        self.assertEqual(5, param.atk)
+        self.assertEqual('銅の剣', param.name)
 
-        w = Weapon(WeaponId.STEEL_SWORD)
-        self.assertEqual(WeaponId.STEEL_SWORD, w.id)
-
-    def test_base_atk(self):
-        w = Weapon(WeaponId.IRON_SWORD)
-        self.assertEqual(10, w._get_base_atk())
-
-        w = Weapon(WeaponId.STEEL_SWORD)
-        self.assertEqual(15, w._get_base_atk())
+    def test_calc_atk(self):
+        param = _BASE_PARAMETER_DICT[WeaponId.IRON_SWORD]
+        w = Weapon(param)
+        atk = w.calc_atk()
+        self.assertEqual(w._base_param.atk + w._calc_level_atk(), atk)
 
     def test_level_atk(self):
-        w = Weapon(WeaponId.IRON_SWORD)
+        param = _BASE_PARAMETER_DICT[WeaponId.IRON_SWORD]
+        w = Weapon(param)
         w.set_level(2)
         self.assertAlmostEqual(2.0, w._calc_level_atk())
         w.set_level(3)

@@ -5,10 +5,20 @@ import unittest
 from battlestatus.character import Character
 from battlestatus.condition import Condition, ConditionId
 from battlestatus.skill import SkillId
-from battlestatus.weapon import WeaponId, Weapon
+from battlestatus.weapon import BaseParameter, WeaponFactory, BaseParameterDict
+
+
+# 武器の能力辞書
+_BASE_PARAMETER_DICT = {
+    0: BaseParameter(atk=5)
+}
 
 
 class TestCharacter(unittest.TestCase):
+
+    def setUp(self) -> None:
+        dict_ = BaseParameterDict(_BASE_PARAMETER_DICT)
+        self.factory = WeaponFactory(dict_)
 
     def test_init(self):
         c = Character()
@@ -19,7 +29,7 @@ class TestCharacter(unittest.TestCase):
     def test_equip(self):
         c = Character()
 
-        w = Weapon(WeaponId.COPPER_SWORD)
+        w = self.factory.create(0)
         c.equip(w)
         self.assertIs(w, c.weapon)
 
@@ -44,23 +54,10 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(5, atk)
 
         c = Character()
-        w = Weapon(WeaponId.COPPER_SWORD)
+        w = self.factory.create(0)
         c.equip(w)
         atk = c._calc_atk_weapon(5)
         self.assertEqual(10, atk)
-
-        c = Character()
-        w = Weapon(WeaponId.IRON_SWORD)
-        c.equip(w)
-        atk = c._calc_atk_weapon(5)
-        self.assertEqual(15, atk)
-
-        c = Character()
-        w = Weapon(WeaponId.IRON_SWORD)
-        w.set_level(2)
-        c.equip(w)
-        atk = c._calc_atk_weapon(5)
-        self.assertEqual(17, atk)
 
 
 if __name__ == '__main__':

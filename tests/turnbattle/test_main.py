@@ -61,14 +61,14 @@ class TestAction(unittest.TestCase):
 		c2 = Character()
 		act = Action(c1, c2)
 		
-		with mock.patch.object(c1, 'attack') as mp_atk:
+		with mock.patch.object(c1, 'atk') as mp_atk:
 			act.exec()
 			mp_atk.assert_called_once_with(c2)
 			
 		c1 = Character(hp=0)
 		c2 = Character()
 		act = Action(c1, c2)
-		with mock.patch.object(c1, 'attack') as mp_atk:
+		with mock.patch.object(c1, 'atk') as mp_atk:
 			act.exec()
 			mp_atk.assert_not_called()
 			
