@@ -27,6 +27,13 @@ class TestParameter(unittest.TestCase):
         self.assertEqual(0, param.get(ParameterId.SPD).value)
         self.assertEqual(0, param.get(ParameterId.LUK).value)
 
+    def test_get_set(self):
+        param = Parameter()
+        param.set(ParameterId.ATK, ParameterValue(10))
+        self.assertEqual(10, param.get(ParameterId.ATK).value)
+        param.set(ParameterId.DEF, ParameterValue(15))
+        self.assertEqual(15, param.get(ParameterId.DEF).value)
+
 
 if __name__ == '__main__':
     unittest.main()
