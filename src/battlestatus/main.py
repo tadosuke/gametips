@@ -4,7 +4,7 @@ from enum import Enum, auto
 
 from battlestatus.character import Character
 from battlestatus.condition import ConditionId
-from battlestatus.parameter import Parameter, ParameterId, ParameterValue
+from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 from battlestatus.skill import SkillId
 from battlestatus.weapon import BaseParameter, BaseParameterDict, WeaponFactory
 
@@ -31,7 +31,7 @@ _factory = WeaponFactory(_param_dict)
 
 
 def _create_default_character():
-    param = Parameter()
+    param = Parameters()
     param.set(ParameterId.ATK, ParameterValue(10))
     c = Character(param)
     return c
@@ -43,41 +43,48 @@ def main():
     print('[BattleStatus]')
 
     chara = _create_default_character()
-    print(f'力={chara.atk}')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     w = _factory.create(WeaponId.COPPER_SWORD)
     chara.equip(w)
-    print(f'力={chara.atk}, 武器={w.name}(Lv.{w.level})')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, 武器={w.name}(Lv.{w.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     w = _factory.create(WeaponId.COPPER_SWORD, 5)
     chara.equip(w)
-    print(f'力={chara.atk}, 武器={w.name}(Lv.{w.level})')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, 武器={w.name}(Lv.{w.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     chara.condition.add(ConditionId.ATK_UP)
-    print(f'力={chara.atk}, 状態={ConditionId.ATK_UP.name}')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, 状態={ConditionId.ATK_UP.name}')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     chara.condition.add(ConditionId.ATK_DOWN)
-    print(f'力={chara.atk}, 状態={ConditionId.ATK_DOWN.name}')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, 状態={ConditionId.ATK_DOWN.name}')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     skill_level = 1
     chara.skills.add(SkillId.ATK_UP, skill_level)
-    print(f'力={chara.atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
     skill_level = 4
     chara.skills.add(SkillId.ATK_UP, skill_level)
-    print(f'力={chara.atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, スキル={SkillId.ATK_UP.name}(Lv.{skill_level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
@@ -86,7 +93,8 @@ def main():
     chara.condition.add(ConditionId.ATK_UP)
     skill_level = 5
     chara.skills.add(SkillId.ATK_UP, skill_level)
-    print(f'力={chara.atk}, '
+    atk = chara.params.get(ParameterId.ATK).value
+    print(f'力={atk}, '
           f'武器={w.name}(Lv.{w.level}), '
           f'スキル={SkillId.ATK_UP.name}(Lv.{skill_level}), '
           f'状態={ConditionId.ATK_UP.name}')

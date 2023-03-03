@@ -23,7 +23,7 @@ class TaskBase:
 	def update(self, delta_sec: float) -> None:
 		"""更新.
 
-		:param 前回更新からの経過時間（秒）
+		:params 前回更新からの経過時間（秒）
 		"""
 
 		if self._exit:

@@ -38,7 +38,7 @@ class ListLogger(AbstractLogger):
     def add(self, log: str) -> None:
         """ログを追加する.
 
-        :param log: ログ
+        :params log: ログ
         """
         self._logs.append(log)
 

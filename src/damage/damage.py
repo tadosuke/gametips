@@ -38,10 +38,10 @@ ConditionMagnificationDictType = dict[Condition, float]
 class AttackInfo:
     """攻撃情報.
 
-    :param power: 威力
-    :param type_: 攻撃タイプ
-    :param attr: 属性
-    :param cond_mag_dict: 状態異常特攻の辞書（状態異常種別:倍率）
+    :params power: 威力
+    :params type_: 攻撃タイプ
+    :params attr: 属性
+    :params cond_mag_dict: 状態異常特攻の辞書（状態異常種別:倍率）
     """
 
     def __init__(
@@ -101,10 +101,10 @@ class AttackInfo:
 class DefenceInfo:
     """防御情報.
 
-    :param physics: 物理防御力
-    :param magic: 魔法防御力
-    :param res_dict: 属性抵抗率の辞書（属性→抵抗率）
-    :param conditions: 状態異常。正常時は None
+    :params physics: 物理防御力
+    :params magic: 魔法防御力
+    :params res_dict: 属性抵抗率の辞書（属性→抵抗率）
+    :params conditions: 状態異常。正常時は None
     """
 
     def __init__(
@@ -141,7 +141,7 @@ class DefenceInfo:
     def get_regist(self, attr: Attribute) -> float:
         """属性抵抗率を得ます.
 
-        :param attr: 属性
+        :params attr: 属性
         :return: 属性抵抗率。見つからない場合は 1.0
         """
 
@@ -167,8 +167,8 @@ class DefenceInfo:
 class Damage:
     """ダメージ.
 
-    :param attack: 攻撃情報
-    :param defence: 防御情報
+    :params attack: 攻撃情報
+    :params defence: 防御情報
     """
 
     def __init__(
@@ -220,7 +220,7 @@ class Damage:
         複数の状態異常と一致する場合は、足し合わせた倍率が適用されます.
         倍率 1.5 の特攻が３つある場合、2.5倍になります.
 
-        :param val: ダメージ値
+        :params val: ダメージ値
         :return: 適用後のダメージ値
         """
 
@@ -238,7 +238,7 @@ class Damage:
     def _calc_regist(self, val: float) -> float:
         """属性抵抗を適用したダメージ値を計算します.
 
-        :param val: ダメージ値
+        :params val: ダメージ値
         :return: 適用後のダメージ値
         """
 

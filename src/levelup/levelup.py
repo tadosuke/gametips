@@ -6,7 +6,7 @@ import typing as tp
 class Calculator:
     """レベルアップ計算機.
 
-    :param exps: レベルごとの経験値
+    :params exps: レベルごとの経験値
     """
 
     def __init__(
@@ -18,7 +18,7 @@ class Calculator:
     def calc(self, exp: int) -> int:
         """経験値に対応するレベルを計算します.
 
-        :param exp: 経験値
+        :params exp: 経験値
         :return: レベル
         """
         assert 0 <= exp
@@ -39,8 +39,8 @@ class Calculator:
 class Character:
     """キャラクター.
 
-    :param calculator: レベル計算オブジェクト
-    :param exp: 初期経験値
+    :params calculator: レベル計算オブジェクト
+    :params exp: 初期経験値
     """
 
     def __init__(
@@ -75,7 +75,7 @@ class Character:
     def add_exp(self, exp: int) -> int:
         """経験値を加算します.
 
-        :param exp: 経験値
+        :params exp: 経験値
         :return: レベルの上昇量
         """
         assert 0 <= exp

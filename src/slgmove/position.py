@@ -7,8 +7,8 @@ class GridPosition:
 
     負の数は扱いません.
 
-    :param x: X座標
-    :param y: Y座標
+    :params x: X座標
+    :params y: Y座標
     """
 
     def __init__(self, x: int = 0, y: int = 0) -> None:
@@ -41,8 +41,8 @@ class GridPosition:
     def shift(self, dx: int, dy: int) -> None:
         """指定したX, Yの分だけ移動します.
 
-        :param dx: Xの移動量
-        :param dy: Yの移動量
+        :params dx: Xの移動量
+        :params dy: Yの移動量
         """
 
         self._x = max(0, self._x + dx)
@@ -88,7 +88,7 @@ class GridPosition:
         グリッド単位での距離となります.
         斜め上の座標を指定した場合、斜め1マスではなく、横→縦で2マスとなる点に注意してください.
 
-        :param pos: 比較先の座標
+        :params pos: 比較先の座標
         :return: 距離
         """
 

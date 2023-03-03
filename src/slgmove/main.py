@@ -10,9 +10,9 @@ from slgmove.position import GridPosition
 class Unit:
     """ユニット.
 
-    :param position: 位置
-    :param move: 移動力
-    :param name: ユニットの名前
+    :params position: 位置
+    :params move: 移動力
+    :params name: ユニットの名前
     """
 
     _DEFAULT_MOVE = 4
@@ -56,8 +56,8 @@ class Unit:
 class Map:
     """マップ.
 
-    :param ground_types: 地面タイプの二次元リスト
-    :param ground_dict: 地面タイプ → Ground の辞書
+    :params ground_types: 地面タイプの二次元リスト
+    :params ground_dict: 地面タイプ → Ground の辞書
     """
 
     def __init__(
@@ -86,7 +86,7 @@ class Map:
     def get_ground(self, pos: GridPosition) -> Ground:
         """指定位置の地面を得ます.
 
-        :param pos: 位置
+        :params pos: 位置
         :return: 地面
         """
 
@@ -96,7 +96,7 @@ class Map:
     def get_type(self, pos: GridPosition) -> int:
         """指定位置の地面タイプを得ます.
 
-        :param pos: 位置
+        :params pos: 位置
         :return: 地面タイプ
         """
 
@@ -105,7 +105,7 @@ class Map:
     def get_cost(self, pos: GridPosition) -> int:
         """指定位置の移動コストを得ます.
 
-        :param pos:
+        :params pos:
         :return: 移動コスト
         """
 
@@ -117,7 +117,7 @@ class Map:
 
         既に存在するユニットを指定した場合は無視します.
 
-        :param unit: ユニット
+        :params unit: ユニット
         """
 
         self._unit_set.add(unit)
@@ -125,7 +125,7 @@ class Map:
     def find_unit_from_pos(self, pos: GridPosition) -> tp.Optional[Unit]:
         """指定位置にいるユニットを得ます.
 
-        :param pos: 位置
+        :params pos: 位置
         :return: ユニット。指定位置にいない場合は None
         """
 
@@ -137,7 +137,7 @@ class Map:
     def is_range(self, pos: GridPosition) -> bool:
         """指定位置がマップ範囲内か？
 
-        :param pos: 位置
+        :params pos: 位置
         :return: 範囲内ならTrue
         """
 
@@ -150,8 +150,8 @@ class Map:
     def can_move(self, pos: GridPosition, move: int) -> bool:
         """指定位置に移動可能か？
 
-        :param pos: 位置
-        :param move: 移動力
+        :params pos: 位置
+        :params move: 移動力
         :return: 移動可能ならTrue
         """
 
@@ -181,7 +181,7 @@ class Map:
 class Ground:
     """地面.
 
-    :param cost: 移動コスト
+    :params cost: 移動コスト
     """
 
     # 進入禁止
@@ -210,7 +210,7 @@ class MoveMap:
     計算結果は、ユニットのいる位置を起点に、移動力を減らしながら書き込まれます.
     移動できない位置は UNSET_VALUE のままになります.
 
-    :param map_: マップ
+    :params map_: マップ
     """
 
     # 書き込みされていない値
@@ -232,7 +232,7 @@ class MoveMap:
     def calc(self, unit) -> None:
         """指定ユニットの移動範囲を計算します.
 
-        :param unit: ユニット
+        :params unit: ユニット
         """
 
         self._reset()
@@ -243,8 +243,8 @@ class MoveMap:
 
         この関数は移動できなくなるまで再帰的に呼び出されます.
 
-        :param pos: 計算する位置
-        :param move: 移動力
+        :params pos: 計算する位置
+        :params move: 移動力
         """
 
         self._write(pos, move)
@@ -259,8 +259,8 @@ class MoveMap:
     def _calc_step_next(self, next_pos: GridPosition, move: int) -> None:
         """次の位置への移動を計算します.
 
-        :param next_pos: 移動先の位置
-        :param move: 移動力
+        :params next_pos: 移動先の位置
+        :params move: 移動力
         """
 
         if not self._map.can_move(next_pos, move):
@@ -273,8 +273,8 @@ class MoveMap:
     def _write(self, pos: GridPosition, move: int) -> None:
         """指定位置に移動力を書き込みます.
 
-        :param pos: 位置
-        :param move: 移動力
+        :params pos: 位置
+        :params move: 移動力
         """
 
         if move <= self._moves[pos.y][pos.x]:
@@ -284,7 +284,7 @@ class MoveMap:
     def can_move(self, pos: GridPosition) -> bool:
         """指定位置に移動できるか？
 
-        :param pos: 位置
+        :params pos: 位置
         :return: 移動できればTrue
         """
 
@@ -299,7 +299,7 @@ class MoveMap:
     def get_step(self, pos: GridPosition) -> int:
         """指定位置の計算結果を得ます.
 
-        :param pos: 位置
+        :params pos: 位置
         :return: 計算結果
         """
 

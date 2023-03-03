@@ -13,7 +13,7 @@ class ConditionId(Flag):
 class Condition:
     """状態異常.
 
-    :param id_: 状態異常 ID
+    :params id_: 状態異常 ID
     """
 
     def __init__(self, id_: ConditionId = None) -> None:
@@ -22,7 +22,7 @@ class Condition:
     def has(self, id_: ConditionId) -> bool:
         """状態異常を持っているか？
 
-        :param id_: 状態異常 ID
+        :params id_: 状態異常 ID
         :return: 状態異常を持っていたら True
         """
         if self._id is None:
@@ -32,7 +32,7 @@ class Condition:
     def add(self, id_: ConditionId) -> None:
         """状態異常を付与します.
 
-        :param id_: 状態異常 ID
+        :params id_: 状態異常 ID
         """
         if self._id is None:
             self._id = id_
@@ -43,7 +43,7 @@ class Condition:
     def remove(self, id_: ConditionId) -> None:
         """状態異常を解除します.
 
-        :param id_: 状態異常 ID
+        :params id_: 状態異常 ID
         """
         if self._id is None:
             return
@@ -59,7 +59,7 @@ class Condition:
     def apply_atk(self, atk: float) -> float:
         """状態異常を攻撃力に適用します.
 
-        :param atk: 適用前の攻撃力
+        :params atk: 適用前の攻撃力
         :return: 適用後の攻撃力
         """
         if self.has(ConditionId.ATK_UP):

@@ -2,7 +2,7 @@
 
 import unittest
 
-from battlestatus.parameter import Parameter, ParameterValue, ParameterId
+from battlestatus.parameters import Parameters, ParameterValue, ParameterId
 
 
 class TestParameterValue(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestParameterValue(unittest.TestCase):
 class TestParameter(unittest.TestCase):
 
     def test_init(self):
-        param = Parameter()
+        param = Parameters()
         self.assertEqual(0, param.get(ParameterId.ATK).value)
         self.assertEqual(0, param.get(ParameterId.DEF).value)
         self.assertEqual(0, param.get(ParameterId.MAT).value)
@@ -28,7 +28,7 @@ class TestParameter(unittest.TestCase):
         self.assertEqual(0, param.get(ParameterId.LUK).value)
 
     def test_get_set(self):
-        param = Parameter()
+        param = Parameters()
         param.set(ParameterId.ATK, ParameterValue(10))
         self.assertEqual(10, param.get(ParameterId.ATK).value)
         param.set(ParameterId.DEF, ParameterValue(15))

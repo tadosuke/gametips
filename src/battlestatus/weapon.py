@@ -16,7 +16,7 @@ class BaseParameter:
 class BaseParameterDict:
     """武器の辞書.
 
-    :param dict_: 辞書の元データ
+    :params dict_: 辞書の元データ
     """
 
     def __init__(self, dict_: dict[tp.Hashable, BaseParameter]) -> None:
@@ -42,8 +42,8 @@ class WeaponFactory:
             level: int = 1) -> tp.Optional[Weapon]:
         """武器を生成します.
 
-        :param id_: 武器 ID
-        :param level: 武器レベル
+        :params id_: 武器 ID
+        :params level: 武器レベル
         :return: 武器。生成に失敗した場合は None
         """
         base_param = self._base_param_dict.get(id_)
@@ -59,7 +59,7 @@ class WeaponFactory:
 class Weapon:
     """武器.
 
-    :param base_param: 基本パラメータ
+    :params base_param: 基本パラメータ
     """
 
     def __init__(self, base_param: BaseParameter) -> None:
@@ -79,7 +79,7 @@ class Weapon:
     def set_level(self, level: int) -> None:
         """武器レベルを設定します.
 
-        :param level: 武器レベル
+        :params level: 武器レベル
         """
         assert 1 <= level
         self._level = level

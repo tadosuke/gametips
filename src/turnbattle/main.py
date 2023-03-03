@@ -12,10 +12,10 @@ log = NullLogger()
 class Character:
     """キャラクター.
 
-    :param hp: 初期 HP
-    :param atk: 攻撃力
-    :param def_: 防御力
-    :param name: 名前
+    :params hp: 初期 HP
+    :params atk: 攻撃力
+    :params def_: 防御力
+    :params name: 名前
     """
 
     _DEFAULT_HP = 100
@@ -51,7 +51,7 @@ class Character:
     def attack(self, target: Character) -> int:
         """攻撃する.
 
-        :param target: 攻撃相手
+        :params target: 攻撃相手
         :return: 与えたダメージ
         """
         point = target.damage(self._atk)
@@ -60,7 +60,7 @@ class Character:
     def damage(self, atk) -> int:
         """ダメージを受ける.
 
-        :param atk: 攻撃力
+        :params atk: 攻撃力
         :return: 受けたダメージ
         """
         point = max(int(atk - self._def / 2), 0)
@@ -70,7 +70,7 @@ class Character:
     def select_target(self, targets: Collection[Character]) -> tp.Optional[Character]:
         """攻撃相手を選ぶ.
 
-        :param targets: 候補
+        :params targets: 候補
         :return: 選ばれたキャラクター
         """
         if len(targets) == 0:
@@ -81,8 +81,8 @@ class Character:
 class Action:
     """行動.
 
-    :param actor: 行動者
-    :param target: ターゲット
+    :params actor: 行動者
+    :params target: ターゲット
     """
 
     def __init__(self, actor: Character, target: Character) -> None:
@@ -108,7 +108,7 @@ class Action:
 class Turn:
     """ターン.
 
-    :param characters: ターン参加者
+    :params characters: ターン参加者
     """
 
     def __init__(self, characters: Collection[Character]) -> None:
@@ -146,7 +146,7 @@ class Turn:
 class Battle:
     """戦闘.
 
-    :param characters: 戦闘参加者
+    :params characters: 戦闘参加者
     """
 
     def __init__(self, characters: Collection[Character]) -> None:

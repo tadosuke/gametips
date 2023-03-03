@@ -1,7 +1,7 @@
 """キャラクター."""
 
 from battlestatus.condition import Condition
-from battlestatus.parameter import Parameter, ParameterValue, ParameterId
+from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 from battlestatus.skill import SkillDict
 from battlestatus.weapon import Weapon
 
@@ -9,21 +9,22 @@ from battlestatus.weapon import Weapon
 class Character:
     """キャラクター.
 
-    :param param: 初期パラメータ
+    :param params: 初期パラメータ
     """
 
-    def __init__(self, param: Parameter = None) -> None:
-        if param is not None:
-            self._param = param
+    def __init__(self, params: Parameters = None) -> None:
+        if params is not None:
+            self._params = params
         else:
-            self._param = Parameter()
+            self._params = Parameters()
         self._weapon = None
         self._condition = Condition()
         self._skills = SkillDict()
 
     @property
-    def atk(self) -> int:
-        return self._param.get(ParameterId.ATK).value
+    def params(self) -> Parameters:
+        """全パラメーター."""
+        return self._params
 
     @property
     def condition(self) -> Condition:
@@ -33,7 +34,7 @@ class Character:
     def equip(self, weapon: Weapon) -> None:
         """武器を装備します.
 
-        :param weapon: 武器
+        :params weapon: 武器
         """
         self._weapon = weapon
 
@@ -56,7 +57,7 @@ class Character:
 
         :return: 攻撃力
         """
-        atk = self.atk
+        atk = self.params.get(ParameterId.ATK).value
         atk = self._calc_atk_weapon(atk)
         atk = self.condition.apply_atk(atk)
         atk = self.skills.apply_atk(atk)
@@ -65,7 +66,7 @@ class Character:
     def _calc_atk_weapon(self, atk: int) -> int:
         """武器の攻撃力を適用します.
 
-        :param atk: 適用前の攻撃力
+        :params atk: 適用前の攻撃力
         :return: 適用後の攻撃力
         """
         if self.weapon is not None:

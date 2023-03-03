@@ -7,7 +7,7 @@ from enum import Enum, auto
 class ParameterValue:
     """パラメーターの値.
 
-    :param value: 初期値
+    :params value: 初期値
     """
 
     def __init__(self, value: int) -> None:
@@ -33,8 +33,8 @@ class ParameterId(Enum):
     LUK = auto()
 
 
-class Parameter:
-    """戦闘パラメーター."""
+class Parameters:
+    """全パラメーター."""
 
     def __init__(self) -> None:
         self._values = {i: ParameterValue(0) for i in ParameterId}
@@ -42,7 +42,7 @@ class Parameter:
     def get(self, id_: ParameterId) -> ParameterValue:
         """パラメーターを取得します.
 
-        :param id_: パラメーター ID
+        :params id_: パラメーター ID
         :return: パラメーター
         """
         return self._values[id_]
@@ -50,7 +50,7 @@ class Parameter:
     def set(self, id_: ParameterId, value: ParameterValue) -> None:
         """パラメーターを設定します.
 
-        :param id_: パラメーター ID
-        :param value: 設定する値
+        :params id_: パラメーター ID
+        :params value: 設定する値
         """
         self._values[id_] = value
