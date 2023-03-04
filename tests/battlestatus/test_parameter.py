@@ -10,9 +10,13 @@ class TestParameterValue(unittest.TestCase):
     def test_init(self):
         value = ParameterValue(10)
         self.assertEqual(10, value.value)
+        value = ParameterValue(999)
+        self.assertEqual(999, value.value)
 
         with self.assertRaises(ValueError):
-            ParameterValue(-10)
+            ParameterValue(-1)
+        with self.assertRaises(ValueError):
+            ParameterValue(1000)
 
 
 class TestParameter(unittest.TestCase):

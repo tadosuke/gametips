@@ -10,8 +10,11 @@ class ParameterValue:
     :params value: 初期値
     """
 
+    MIN = 0
+    MAX = 999
+
     def __init__(self, value: int) -> None:
-        if value < 0:
+        if not self.MIN <= value <= self.MAX:
             raise ValueError
 
         self._value = value
