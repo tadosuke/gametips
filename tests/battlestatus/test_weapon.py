@@ -4,7 +4,7 @@ import unittest
 from enum import Enum, auto
 
 from battlestatus.parameters import ParameterValue
-from battlestatus.weapon import Weapon, BaseParameter, BaseParameterDict, WeaponFactory
+from battlestatus.weapon import Weapon, BaseParameter, BaseParameterDict, WeaponFactory, ItemName
 
 
 class WeaponId(Enum):
@@ -18,12 +18,23 @@ class WeaponId(Enum):
 # 武器の能力辞書
 _BASE_PARAMETER_DICT = {
     WeaponId.COPPER_SWORD:
-        BaseParameter(name='銅の剣', atk=ParameterValue(5)),
+        BaseParameter(name=ItemName('銅の剣'), atk=ParameterValue(5)),
     WeaponId.IRON_SWORD:
-        BaseParameter(name='鉄の剣', atk=ParameterValue(10)),
+        BaseParameter(name=ItemName('鉄の剣'), atk=ParameterValue(10)),
     WeaponId.STEEL_SWORD:
-        BaseParameter(name='鋼の剣', atk=ParameterValue(15)),
+        BaseParameter(name=ItemName('鋼の剣'), atk=ParameterValue(15)),
 }
+
+
+class TestItemName(unittest.TestCase):
+
+    def test_init(self):
+        name = ItemName('123456789012')
+        self.assertEqual('123456789012', name.value)
+        self.assertIs(str(name), name.value)
+
+        with self.assertRaises(ValueError):
+            ItemName('1234567890123')
 
 
 class TestBaseParameterDict(unittest.TestCase):
@@ -31,7 +42,7 @@ class TestBaseParameterDict(unittest.TestCase):
     def test_init(self):
         wdict = BaseParameterDict(_BASE_PARAMETER_DICT)
         param = wdict.get(WeaponId.COPPER_SWORD)
-        self.assertEqual('銅の剣', param.name)
+        self.assertEqual('銅の剣', param.name.value)
         self.assertEqual(5, param.atk.value)
 
         param = wdict.get(-1)
@@ -60,7 +71,7 @@ class TestWeapon(unittest.TestCase):
         w = Weapon(param)
         self.assertIs(param, w._base_param)
         self.assertEqual(5, param.atk.value)
-        self.assertEqual('銅の剣', param.name)
+        self.assertEqual('銅の剣', param.name.value)
 
     def test_calc_atk(self):
         param = _BASE_PARAMETER_DICT[WeaponId.IRON_SWORD]

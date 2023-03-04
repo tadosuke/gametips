@@ -7,11 +7,29 @@ from dataclasses import dataclass
 from battlestatus.parameters import ParameterValue
 
 
+class ItemName:
+    """アイテム名."""
+
+    MAX_LENGTH = 12
+
+    def __init__(self, name: str) -> None:
+        if self.MAX_LENGTH < len(name):
+            raise ValueError
+        self._name = name
+
+    @property
+    def value(self) -> str:
+        return self._name
+
+    def __str__(self) -> str:
+        return self._name
+
+
 @dataclass
 class BaseParameter:
     """武器の基礎パラメーター."""
 
-    name: str = ''
+    name: ItemName = ItemName('')
     atk: ParameterValue = ParameterValue(0)
 
 

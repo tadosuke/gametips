@@ -6,7 +6,7 @@ from battlestatus.character import Character
 from battlestatus.condition import ConditionId
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 from battlestatus.skill import SkillId
-from battlestatus.weapon import BaseParameter, BaseParameterDict, WeaponFactory
+from battlestatus.weapon import BaseParameter, BaseParameterDict, WeaponFactory, ItemName
 
 
 class WeaponId(Enum):
@@ -20,11 +20,11 @@ class WeaponId(Enum):
 # 武器の能力辞書
 _BASE_PARAMETER_DICT = {
     WeaponId.COPPER_SWORD:
-        BaseParameter(name='銅の剣', atk=ParameterValue(5)),
+        BaseParameter(name=ItemName('銅の剣'), atk=ParameterValue(5)),
     WeaponId.IRON_SWORD:
-        BaseParameter(name='鉄の剣', atk=ParameterValue(10)),
+        BaseParameter(name=ItemName('鉄の剣'), atk=ParameterValue(10)),
     WeaponId.STEEL_SWORD:
-        BaseParameter(name='鋼の剣', atk=ParameterValue(15)),
+        BaseParameter(name=ItemName('鋼の剣'), atk=ParameterValue(15)),
 }
 _param_dict = BaseParameterDict(_BASE_PARAMETER_DICT)
 _factory = WeaponFactory(_param_dict)
