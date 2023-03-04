@@ -20,11 +20,11 @@ class WeaponId(Enum):
 # 武器の能力辞書
 _BASE_PARAMETER_DICT = {
     WeaponId.COPPER_SWORD:
-        BaseParameter(name='銅の剣', atk=5),
+        BaseParameter(name='銅の剣', atk=ParameterValue(5)),
     WeaponId.IRON_SWORD:
-        BaseParameter(name='鉄の剣', atk=10),
+        BaseParameter(name='鉄の剣', atk=ParameterValue(10)),
     WeaponId.STEEL_SWORD:
-        BaseParameter(name='鋼の剣', atk=15),
+        BaseParameter(name='鋼の剣', atk=ParameterValue(15)),
 }
 _param_dict = BaseParameterDict(_BASE_PARAMETER_DICT)
 _factory = WeaponFactory(_param_dict)

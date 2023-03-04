@@ -12,7 +12,7 @@ from battlestatus.weapon import BaseParameter, WeaponFactory, BaseParameterDict
 
 # 武器の能力辞書
 _BASE_PARAMETER_DICT = {
-    0: BaseParameter(atk=5)
+    0: BaseParameter(atk=ParameterValue(5))
 }
 
 

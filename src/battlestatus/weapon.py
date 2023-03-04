@@ -4,13 +4,15 @@ from __future__ import annotations
 import typing as tp
 from dataclasses import dataclass
 
+from battlestatus.parameters import ParameterValue
+
 
 @dataclass
 class BaseParameter:
     """武器の基礎パラメーター."""
 
     name: str = ''
-    atk: int = 0
+    atk: ParameterValue = ParameterValue(0)
 
 
 class BaseParameterDict:
@@ -89,7 +91,7 @@ class Weapon:
 
         :return: 攻撃力
         """
-        atk = self._base_param.atk
+        atk = self._base_param.atk.value
         atk += self._calc_level_atk()
         return int(atk)
 
@@ -100,7 +102,7 @@ class Weapon:
         """
         if self._level == 1:
             return 0
-        base = self._base_param.atk
+        base = self._base_param.atk.value
         ratio = float(self._level - 1.0) / 5.0
         return base * ratio
 
