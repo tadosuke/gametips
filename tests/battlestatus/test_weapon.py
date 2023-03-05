@@ -70,8 +70,7 @@ class TestWeapon(unittest.TestCase):
         param.id = WeaponId.COPPER_SWORD
         w = Weapon(param)
         self.assertIs(param, w._base_param)
-        self.assertEqual(5, param.atk.value)
-        self.assertEqual('銅の剣', param.name.value)
+        self.assertEqual('銅の剣', w.name.value)
 
     def test_calc_atk(self):
         param = _BASE_PARAMETER_DICT[WeaponId.IRON_SWORD]

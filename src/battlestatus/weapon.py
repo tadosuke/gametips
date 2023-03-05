@@ -87,7 +87,7 @@ class Weapon:
         self._level = 1
 
     @property
-    def name(self) -> str:
+    def name(self) -> ItemName:
         """名前."""
         return self._base_param.name
 
