@@ -1,7 +1,6 @@
 """装備品."""
 from __future__ import annotations
 
-import typing as tp
 from dataclasses import dataclass
 
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
@@ -28,6 +27,7 @@ class ItemName:
         if isinstance(other, ItemName):
             return self._name == other.value
         return self._name == other
+
 
 @dataclass
 class BaseData:
@@ -73,8 +73,11 @@ class Equipment:
         params = Parameters()
 
         for pid in ParameterId:
-            value = self._calc_level_param(pid)
-            params.set(pid, ParameterValue(value))
+            base_param = self._base_data.params.get(pid)
+            if base_param is None:
+                continue
+            level_value = self._calc_level_param(pid)
+            params.set(pid, ParameterValue(base_param.value + level_value))
 
         return params
 

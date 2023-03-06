@@ -5,22 +5,22 @@ from unittest import mock
 
 from battlestatus.character import Character
 from battlestatus.condition import Condition, ConditionId
+from battlestatus.equipment import Equipment, ItemName, BaseData
 from battlestatus.parameters import Parameters, ParameterValue, ParameterId
 from battlestatus.skill import SkillId
-from battlestatus.weapon import BaseParameter, WeaponFactory, BaseParameterDict
 
 
-# 武器の能力辞書
-_BASE_PARAMETER_DICT = {
-    0: BaseParameter(atk=ParameterValue(5))
-}
+def _create_equipment() -> Equipment:
+    params = Parameters()
+    params.set(ParameterId.ATK, ParameterValue(5))
+    base_data = BaseData(
+        name=ItemName('銅の剣'),
+        params=params)
+    eq = Equipment(base_data)
+    return eq
 
 
 class TestCharacter(unittest.TestCase):
-
-    def setUp(self) -> None:
-        dict_ = BaseParameterDict(_BASE_PARAMETER_DICT)
-        self.factory = WeaponFactory(dict_)
 
     def test_init(self):
         c = Character()
@@ -38,12 +38,12 @@ class TestCharacter(unittest.TestCase):
     def test_equip(self):
         c = Character()
 
-        w = self.factory.create(0)
-        c.equip(w)
-        self.assertIs(w, c.weapon)
+        eq = _create_equipment()
+        c.set_equip(eq)
+        self.assertIs(eq, c.get_equip())
 
-        c.unequip()
-        self.assertIsNone(c.weapon)
+        c.set_equip(None)
+        self.assertIsNone(c.get_equip())
 
     def test_calc_atk(self):
         param = Parameters()
@@ -54,7 +54,7 @@ class TestCharacter(unittest.TestCase):
         param = Parameters()
         param.set(ParameterId.ATK, ParameterValue(10))
         c = Character(param)
-        with mock.patch.object(c, '_calc_atk_weapon') as mp_weapon:
+        with mock.patch.object(c, '_calc_atk_equip') as mp_weapon:
             c.calc_atk()
             mp_weapon.assert_called_once_with(10)
 
@@ -72,15 +72,15 @@ class TestCharacter(unittest.TestCase):
         c.condition.add(ConditionId.ATK_UP)
         self.assertEqual(12, c.calc_atk())
 
-    def test_calc_atk_weapon(self):
+    def test_calc_atk_equip(self):
         c = Character()
-        atk = c._calc_atk_weapon(5)
+        atk = c._calc_atk_equip(5)
         self.assertEqual(5, atk)
 
         c = Character()
-        w = self.factory.create(0)
-        c.equip(w)
-        atk = c._calc_atk_weapon(5)
+        eq = _create_equipment()
+        c.set_equip(eq)
+        atk = c._calc_atk_equip(5)
         self.assertEqual(10, atk)
 
 

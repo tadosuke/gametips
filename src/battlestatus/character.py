@@ -1,9 +1,11 @@
 """キャラクター."""
 
+import typing as tp
+
 from battlestatus.condition import Condition
-from battlestatus.parameters import Parameters, ParameterId, ParameterValue
+from battlestatus.equipment import Equipment
+from battlestatus.parameters import Parameters, ParameterId
 from battlestatus.skill import SkillDict
-from battlestatus.weapon import Weapon
 
 
 class Character:
@@ -17,7 +19,7 @@ class Character:
             self._params = params
         else:
             self._params = Parameters()
-        self._weapon = None
+        self._equipment: tp.Optional[Equipment] = None
         self._condition = Condition()
         self._skills = SkillDict()
 
@@ -31,21 +33,19 @@ class Character:
         """状態異常."""
         return self._condition
 
-    def equip(self, weapon: Weapon) -> None:
-        """武器を装備します.
+    def set_equip(self, eq: tp.Optional[Equipment]) -> None:
+        """装備品を設定します.
 
-        :params weapon: 武器
+        :params eq: 装備。None を指定すると解除します
         """
-        self._weapon = weapon
+        self._equipment = eq
 
-    def unequip(self) -> None:
-        """武器の装備を解除します."""
-        self._weapon = None
+    def get_equip(self) -> tp.Optional[Equipment]:
+        """装備品を得ます.
 
-    @property
-    def weapon(self) -> Weapon:
-        """武器."""
-        return self._weapon
+        :return: 装備品。装備していないときは None
+        """
+        return self._equipment
 
     @property
     def skills(self) -> SkillDict:
@@ -53,22 +53,26 @@ class Character:
         return self._skills
 
     def calc_atk(self) -> int:
-        """武器・スキルなどを加味した攻撃力を計算します.
+        """装備・スキルなどを加味した攻撃力を計算します.
 
         :return: 攻撃力
         """
         atk = self.params.get(ParameterId.ATK).value
-        atk = self._calc_atk_weapon(atk)
+        atk = self._calc_atk_equip(atk)
         atk = self.condition.apply_atk(atk)
         atk = self.skills.apply_atk(atk)
         return int(atk)
 
-    def _calc_atk_weapon(self, atk: int) -> int:
-        """武器の攻撃力を適用します.
+    def _calc_atk_equip(self, atk: int) -> int:
+        """装備品の攻撃力を適用します.
 
         :params atk: 適用前の攻撃力
         :return: 適用後の攻撃力
         """
-        if self.weapon is not None:
-            atk += self.weapon.calc_atk()
+        if self._equipment is not None:
+            eq_param = self._equipment.calc_params()
+            eq_atk = eq_param.get(ParameterId.ATK)
+            if eq_atk is None:
+                return atk
+            atk += eq_atk.value
         return atk

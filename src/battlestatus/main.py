@@ -1,33 +1,30 @@
 """battlestatus モジュールの使用サンプル."""
 
-from enum import Enum, auto
-
 from battlestatus.character import Character
 from battlestatus.condition import ConditionId
+from battlestatus.equipment import ItemName, Equipment, BaseData
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 from battlestatus.skill import SkillId
-from battlestatus.weapon import BaseParameter, BaseParameterDict, WeaponFactory, ItemName
 
 
-class WeaponId(Enum):
-    """武器 ID."""
+def _create_copper_sword() -> Equipment:
+    params = Parameters()
+    params.set(ParameterId.ATK, ParameterValue(5))
+    base_data = BaseData(
+        name=ItemName('銅の剣'),
+        params=params)
+    eq = Equipment(base_data)
+    return eq
 
-    COPPER_SWORD = auto()  # 銅の剣
-    IRON_SWORD = auto()  # 鉄の剣
-    STEEL_SWORD = auto()  # 鋼の剣
 
-
-# 武器の能力辞書
-_BASE_PARAMETER_DICT = {
-    WeaponId.COPPER_SWORD:
-        BaseParameter(name=ItemName('銅の剣'), atk=ParameterValue(5)),
-    WeaponId.IRON_SWORD:
-        BaseParameter(name=ItemName('鉄の剣'), atk=ParameterValue(10)),
-    WeaponId.STEEL_SWORD:
-        BaseParameter(name=ItemName('鋼の剣'), atk=ParameterValue(15)),
-}
-_param_dict = BaseParameterDict(_BASE_PARAMETER_DICT)
-_factory = WeaponFactory(_param_dict)
+def _create_steel_sword() -> Equipment:
+    params = Parameters()
+    params.set(ParameterId.ATK, ParameterValue(20))
+    base_data = BaseData(
+        name=ItemName('鋼の剣'),
+        params=params)
+    eq = Equipment(base_data)
+    return eq
 
 
 def _create_default_character():
@@ -48,17 +45,18 @@ def main():
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
-    w = _factory.create(WeaponId.COPPER_SWORD)
-    chara.equip(w)
+    eq = _create_copper_sword()
+    chara.set_equip(eq)
     atk = chara.params.get(ParameterId.ATK).value
-    print(f'力={atk}, 武器={w.name}(Lv.{w.level})')
+    print(f'力={atk}, 武器={eq.name}(Lv.{eq.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
-    w = _factory.create(WeaponId.COPPER_SWORD, 5)
-    chara.equip(w)
+    eq = _create_copper_sword()
+    eq.set_level(3)
+    chara.set_equip(eq)
     atk = chara.params.get(ParameterId.ATK).value
-    print(f'力={atk}, 武器={w.name}(Lv.{w.level})')
+    print(f'力={atk}, 武器={eq.name}(Lv.{eq.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
@@ -88,14 +86,15 @@ def main():
     print(f'　→ 総攻撃力={chara.calc_atk()}')
 
     chara = _create_default_character()
-    w = _factory.create(WeaponId.STEEL_SWORD, 5)
-    chara.equip(w)
+    eq = _create_steel_sword()
+    eq.set_level(10)
+    chara.set_equip(eq)
     chara.condition.add(ConditionId.ATK_UP)
     skill_level = 5
     chara.skills.add(SkillId.ATK_UP, skill_level)
     atk = chara.params.get(ParameterId.ATK).value
     print(f'力={atk}, '
-          f'武器={w.name}(Lv.{w.level}), '
+          f'武器={eq.name}(Lv.{eq.level}), '
           f'スキル={SkillId.ATK_UP.name}(Lv.{skill_level}), '
           f'状態={ConditionId.ATK_UP.name}')
     print(f'　→ 総攻撃力={chara.calc_atk()}')

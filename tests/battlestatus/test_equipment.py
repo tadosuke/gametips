@@ -40,7 +40,7 @@ class TestEquipment(unittest.TestCase):
             name=ItemName('魔法の剣'),
             params=params)
         eq = Equipment(base_data)
-        eq.set_level(11)
+        eq.set_level(6)
         ret_params = eq.calc_params()
         self.assertEqual(20, ret_params.get(ParameterId.ATK))
         self.assertEqual(16, ret_params.get(ParameterId.DEF))
