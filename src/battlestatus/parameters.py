@@ -23,6 +23,12 @@ class ParameterValue:
     def value(self) -> int:
         return self._value
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, ParameterValue):
+            return self._value == other.value
+        else:
+            return self._value == other
+
 
 class ParameterId(Enum):
     """パラメーター ID."""

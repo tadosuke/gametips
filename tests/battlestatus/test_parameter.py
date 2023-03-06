@@ -18,6 +18,11 @@ class TestParameterValue(unittest.TestCase):
         with self.assertRaises(ValueError):
             ParameterValue(1000)
 
+    def test_equal(self):
+        value = ParameterValue(10)
+        self.assertEqual(ParameterValue(10), value)
+        self.assertEqual(10, value)
+
 
 class TestParameter(unittest.TestCase):
 

@@ -2,15 +2,16 @@
 
 import unittest
 
-from battlestatus.equipment import Equipment, BaseData
+from battlestatus.equipment import Equipment, BaseData, ItemName
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
-from battlestatus.weapon import ItemName
 
 
 class TestItemName(unittest.TestCase):
 
     def test_init(self):
         name = ItemName('123456789012')
+        self.assertEqual('123456789012', name)
+        self.assertEqual(ItemName('123456789012'), name)
         self.assertEqual('123456789012', name.value)
         self.assertIs(str(name), name.value)
 
@@ -41,8 +42,8 @@ class TestEquipment(unittest.TestCase):
         eq = Equipment(base_data)
         eq.set_level(11)
         ret_params = eq.calc_params()
-        self.assertEqual(20, ret_params.get(ParameterId.ATK).value)
-        self.assertEqual(16, ret_params.get(ParameterId.DEF).value)
+        self.assertEqual(20, ret_params.get(ParameterId.ATK))
+        self.assertEqual(16, ret_params.get(ParameterId.DEF))
 
     def test_calc_level_param(self):
         eq = Equipment(self.base_data)

@@ -24,6 +24,10 @@ class ItemName:
     def __str__(self) -> str:
         return self._name
 
+    def __eq__(self, other) -> bool:
+        if isinstance(other, ItemName):
+            return self._name == other.value
+        return self._name == other
 
 @dataclass
 class BaseData:
