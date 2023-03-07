@@ -137,3 +137,10 @@ class AllEquipments:
         """
         before = self._equipments.pop(part_id, None)
         return before
+
+    def calc_params(self) -> Parameters:
+        """全部位の装備パラメーターの合計値を得ます."""
+        params = Parameters()
+        for eq in self._equipments.values():
+            params += eq.calc_params()
+        return params

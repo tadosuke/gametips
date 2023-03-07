@@ -35,16 +35,6 @@ class TestCharacter(unittest.TestCase):
         atk = c.params.get(ParameterId.ATK).value
         self.assertEqual(15, atk)
 
-    def test_equip(self):
-        c = Character()
-
-        eq = _create_equipment()
-        c.set_equip(eq)
-        self.assertIs(eq, c.get_equip())
-
-        c.set_equip(None)
-        self.assertIsNone(c.get_equip())
-
     def test_calc_atk(self):
         param = Parameters()
         c = Character(param)

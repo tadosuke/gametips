@@ -29,6 +29,11 @@ class ParameterValue:
         else:
             return self._value == other
 
+    def __add__(self, other) -> ParameterValue:
+        if isinstance(other, ParameterValue):
+            return ParameterValue(self._value + other.value)
+        return ParameterValue(self._value + other)
+
 
 class ParameterId(Enum):
     """パラメーター ID."""
@@ -63,3 +68,11 @@ class Parameters:
         :params value: 設定する値
         """
         self._values[id_] = value
+
+    def __add__(self, other) -> Parameters:
+        assert isinstance(other, Parameters)
+
+        for i in ParameterId:
+            self._values[i] += other.get(i)
+
+        return self

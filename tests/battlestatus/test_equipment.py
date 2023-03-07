@@ -109,6 +109,26 @@ class TestEquipments(unittest.TestCase):
         self.assertIsNone(eqs.get(PartId.ARM))
         self.assertIs(eq3, eqs.get(PartId.BODY))
 
+    def test_calc_params(self):
+        eqs = AllEquipments()
+
+        params1 = Parameters()
+        params1.set(ParameterId.ATK, ParameterValue(2))
+        params1.set(ParameterId.DEF, ParameterValue(3))
+        eq1 = Equipment(BaseData(part_id=PartId.ARM, params=params1))
+        eqs.set(eq1)
+
+        params2 = Parameters()
+        params2.set(ParameterId.ATK, ParameterValue(3))
+        params2.set(ParameterId.SPD, ParameterValue(2))
+        eq2 = Equipment(BaseData(part_id=PartId.BODY, params=params2))
+        eqs.set(eq2)
+
+        ret_params = eqs.calc_params()
+        self.assertEqual(5, ret_params.get(ParameterId.ATK))
+        self.assertEqual(3, ret_params.get(ParameterId.DEF))
+        self.assertEqual(2, ret_params.get(ParameterId.SPD))
+
 
 if __name__ == '__main__':
     unittest.main()

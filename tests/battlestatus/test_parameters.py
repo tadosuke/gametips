@@ -23,6 +23,17 @@ class TestParameterValue(unittest.TestCase):
         self.assertEqual(ParameterValue(10), value)
         self.assertEqual(10, value)
 
+    def test_add(self):
+        value = ParameterValue(2)
+
+        # ParameterValue
+        sum_value = value + ParameterValue(3)
+        self.assertEqual(5, sum_value.value)
+
+        # 値
+        sum_value = value + 4
+        self.assertEqual(6, sum_value.value)
+
 
 class TestParameter(unittest.TestCase):
 
@@ -42,6 +53,20 @@ class TestParameter(unittest.TestCase):
         self.assertEqual(10, param.get(ParameterId.ATK).value)
         param.set(ParameterId.DEF, ParameterValue(15))
         self.assertEqual(15, param.get(ParameterId.DEF).value)
+
+    def test_add(self):
+        param1 = Parameters()
+        param1.set(ParameterId.ATK, ParameterValue(2))
+        param1.set(ParameterId.DEF, ParameterValue(3))
+
+        param2 = Parameters()
+        param2.set(ParameterId.ATK, ParameterValue(3))
+        param2.set(ParameterId.SPD, ParameterValue(4))
+
+        sum_param = param1 + param2
+        self.assertEqual(5, sum_param.get(ParameterId.ATK))
+        self.assertEqual(3, sum_param.get(ParameterId.DEF))
+        self.assertEqual(4, sum_param.get(ParameterId.SPD))
 
 
 if __name__ == '__main__':

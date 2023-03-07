@@ -3,7 +3,7 @@
 import typing as tp
 
 from battlestatus.condition import Condition
-from battlestatus.equipment import Equipment
+from battlestatus.equipment import Equipment, AllEquipments
 from battlestatus.parameters import Parameters, ParameterId
 from battlestatus.skill import SkillDict
 
@@ -20,6 +20,7 @@ class Character:
         else:
             self._params = Parameters()
         self._equipment: tp.Optional[Equipment] = None
+        self._equipments = AllEquipments()
         self._condition = Condition()
         self._skills = SkillDict()
 
@@ -33,19 +34,10 @@ class Character:
         """状態異常."""
         return self._condition
 
-    def set_equip(self, eq: tp.Optional[Equipment]) -> None:
-        """装備品を設定します.
-
-        :params eq: 装備。None を指定すると解除します
-        """
-        self._equipment = eq
-
-    def get_equip(self) -> tp.Optional[Equipment]:
-        """装備品を得ます.
-
-        :return: 装備品。装備していないときは None
-        """
-        return self._equipment
+    @property
+    def equipments(self) -> AllEquipments:
+        """全部位の装備."""
+        return self._equipments
 
     @property
     def skills(self) -> SkillDict:
