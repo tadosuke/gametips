@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import typing as tp
 
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 
@@ -33,8 +34,9 @@ class ItemName:
 class BaseData:
     """基本データ."""
 
-    name: ItemName = ItemName('')
-    params: Parameters = Parameters()
+    name: ItemName = ItemName('')  # 名前
+    part_id: int = 0  # 装備部位
+    params: Parameters = Parameters()  # パラメーター
 
 
 class Equipment:
@@ -51,6 +53,11 @@ class Equipment:
     def name(self) -> ItemName:
         """名前."""
         return self._base_data.name
+
+    @property
+    def part_id(self) -> int:
+        """装備部位 ID."""
+        return self._base_data.part_id
 
     @property
     def level(self) -> int:
@@ -94,3 +101,39 @@ class Equipment:
         base = param.value
         ratio = float(self._level - 1.0) / 5.0
         return int(base * ratio)
+
+
+class AllEquipments:
+    """全部位の装備."""
+
+    def __init__(self):
+        self._equipments: dict[int, tp.Optional[Equipment]] = {}
+
+    def set(self, eq: Equipment) -> tp.Optional[Equipment]:
+        """装備品を設定します.
+
+        同じ部位に既に装備があった場合は入れ替わります.
+
+        :param eq: 装備品
+        :return: 入れ替わった装備。空の場合は None
+        """
+        before = self._equipments.get(eq.part_id)
+        self._equipments[eq.part_id] = eq
+        return before
+
+    def get(self, part_id: int) -> tp.Optional[Equipment]:
+        """指定部位の装備を取得します.
+
+        :param part_id: 部位 ID
+        :return: 装備品。装備していない場合は None
+        """
+        return self._equipments.get(part_id)
+
+    def pop(self, part_id: int) -> tp.Optional[Equipment]:
+        """指定部位の装備を外します.
+
+        :param part_id: 部位 ID
+        :return: 装備。装備していなかった場合は None
+        """
+        before = self._equipments.pop(part_id, None)
+        return before
