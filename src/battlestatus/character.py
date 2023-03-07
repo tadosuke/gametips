@@ -61,10 +61,5 @@ class Character:
         :params atk: 適用前の攻撃力
         :return: 適用後の攻撃力
         """
-        if self._equipment is not None:
-            eq_param = self._equipment.calc_params()
-            eq_atk = eq_param.get(ParameterId.ATK)
-            if eq_atk is None:
-                return atk
-            atk += eq_atk.value
-        return atk
+        params = self._equipments.calc_params()
+        return atk + params.get(ParameterId.ATK).value

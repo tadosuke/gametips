@@ -68,8 +68,9 @@ class TestCharacter(unittest.TestCase):
         self.assertEqual(5, atk)
 
         c = Character()
+        eqs = c.equipments
         eq = _create_equipment()
-        c.set_equip(eq)
+        eqs.set(eq)
         atk = c._calc_atk_equip(5)
         self.assertEqual(10, atk)
 
