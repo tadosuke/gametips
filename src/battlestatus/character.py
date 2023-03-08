@@ -48,7 +48,7 @@ class Character:
         """
         atk = self.params.get(ParameterId.ATK).value
         atk = self._calc_param_equip(ParameterId.ATK, atk)
-        atk = self.condition.apply_atk(atk)
+        atk = self.condition.apply_param(ParameterId.ATK, atk)
         atk = self.skills.apply_atk(atk)
         return int(atk)
 

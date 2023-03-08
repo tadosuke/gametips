@@ -2,6 +2,8 @@
 
 from enum import Flag, auto
 
+from battlestatus.parameters import ParameterId
+
 
 class ConditionId(Flag):
     """状態異常 ID."""
@@ -14,7 +16,7 @@ class ConditionId(Flag):
 class Condition:
     """状態異常.
 
-    :params id_: 状態異常 ID
+    :param id_: 状態異常 ID
     """
 
     def __init__(self, id_: ConditionId = None) -> None:
@@ -23,7 +25,7 @@ class Condition:
     def has(self, id_: ConditionId) -> bool:
         """状態異常を持っているか？
 
-        :params id_: 状態異常 ID
+        :param id_: 状態異常 ID
         :return: 状態異常を持っていたら True
         """
         if self._id is None:
@@ -33,7 +35,7 @@ class Condition:
     def add(self, id_: ConditionId) -> None:
         """状態異常を付与します.
 
-        :params id_: 状態異常 ID
+        :param id_: 状態異常 ID
         """
         if self._id is None:
             self._id = id_
@@ -44,7 +46,7 @@ class Condition:
     def remove(self, id_: ConditionId) -> None:
         """状態異常を解除します.
 
-        :params id_: 状態異常 ID
+        :param id_: 状態異常 ID
         """
         if self._id is None:
             return
@@ -57,10 +59,21 @@ class Condition:
         if both in self._id:
             self._id = None
 
-    def apply_atk(self, atk: float) -> float:
+    def apply_param(self, id_: ParameterId, value: float) -> float:
+        """状態異常をパラメーター値に適用します.
+
+        :param id_: パラメーター ID
+        :param value: 適用前のパラメーター値
+        :return: 適用後のパラメーター値
+        """
+        if id_ == ParameterId.ATK:
+            return self._apply_atk(value)
+        return value
+
+    def _apply_atk(self, atk: float) -> float:
         """状態異常を攻撃力に適用します.
 
-        :params atk: 適用前の攻撃力
+        :param atk: 適用前の攻撃力
         :return: 適用後の攻撃力
         """
         if self.has(ConditionId.ATK_UP):

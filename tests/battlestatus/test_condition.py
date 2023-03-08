@@ -1,8 +1,10 @@
 """condition モジュールのテスト."""
 
 import unittest
+from unittest import mock
 
 from battlestatus.condition import Condition, ConditionId
+from battlestatus.parameters import ParameterId
 
 
 class TestCondition(unittest.TestCase):
@@ -30,19 +32,28 @@ class TestCondition(unittest.TestCase):
         self.assertFalse(
             cond.has(ConditionId.ATK_DOWN))
 
+    def test_apply_param(self):
+        c = Condition()
+        with mock.patch.object(c, '_apply_atk') as mp_atk:
+            c.apply_param(ParameterId.ATK, 10)
+            mp_atk.assert_called_once_with(10)
+        with mock.patch.object(c, '_apply_atk') as mp_atk:
+            c.apply_param(ParameterId.DEF, 10)
+            mp_atk.assert_not_called()
+
     def test_apply_atk(self):
         c = Condition()
-        atk = c.apply_atk(10)
+        atk = c._apply_atk(10)
         self.assertEqual(10, atk)
 
         c = Condition()
         c.add(ConditionId.ATK_UP)
-        atk = c.apply_atk(10)
+        atk = c._apply_atk(10)
         self.assertAlmostEqual(12.5, atk)
 
         c = Condition()
         c.add(ConditionId.ATK_DOWN)
-        atk = c.apply_atk(10)
+        atk = c._apply_atk(10)
         self.assertAlmostEqual(7.5, atk)
 
     def test_can_act(self):
