@@ -60,3 +60,12 @@ class Character:
         """
         params = self._equipments.calc_params()
         return atk + params.get(ParameterId.ATK).value
+
+    def can_act(self) -> bool:
+        """行動可能か？
+
+        :return: 行動可能なら True
+        """
+        can_act = True
+        can_act &= self.condition.can_act()
+        return can_act

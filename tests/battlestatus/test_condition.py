@@ -45,6 +45,19 @@ class TestCondition(unittest.TestCase):
         atk = c.apply_atk(10)
         self.assertAlmostEqual(7.5, atk)
 
+    def test_can_act(self):
+        c = Condition()
+        self.assertTrue(c.can_act())
+
+        c.add(ConditionId.ATK_UP)
+        self.assertTrue(c.can_act())
+
+        c.add(ConditionId.SLEEP)
+        self.assertFalse(c.can_act())
+
+        c.remove(ConditionId.SLEEP)
+        self.assertTrue(c.can_act())
+
 
 if __name__ == '__main__':
     unittest.main()

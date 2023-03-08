@@ -74,6 +74,13 @@ class TestCharacter(unittest.TestCase):
         atk = c._calc_atk_equip(5)
         self.assertEqual(10, atk)
 
+    def test_can_act(self):
+        c = Character()
+        with mock.patch.object(c.condition, 'can_act', return_value=True):
+            self.assertTrue(c.can_act())
+        with mock.patch.object(c.condition, 'can_act', return_value=False):
+            self.assertFalse(c.can_act())
+
 
 if __name__ == '__main__':
     unittest.main()

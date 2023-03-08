@@ -8,6 +8,7 @@ class ConditionId(Flag):
 
     ATK_UP = auto()  # 攻撃力アップ
     ATK_DOWN = auto()  # 攻撃力ダウン
+    SLEEP = auto()  # 眠り
 
 
 class Condition:
@@ -67,3 +68,12 @@ class Condition:
         elif self.has(ConditionId.ATK_DOWN):
             atk *= 0.75
         return atk
+
+    def can_act(self) -> bool:
+        """行動可能か？
+
+        :return: 行動可能なら True
+        """
+        if self.has(ConditionId.SLEEP):
+            return False
+        return True
