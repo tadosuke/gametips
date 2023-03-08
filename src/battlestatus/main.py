@@ -46,7 +46,7 @@ def main():
 
     chara = _create_default_character()
     eq = _create_copper_sword()
-    chara.set_equip(eq)
+    chara.equipments.set(eq)
     atk = chara.params.get(ParameterId.ATK).value
     print(f'力={atk}, 武器={eq.name}(Lv.{eq.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
@@ -54,7 +54,7 @@ def main():
     chara = _create_default_character()
     eq = _create_copper_sword()
     eq.set_level(3)
-    chara.set_equip(eq)
+    chara.equipments.set(eq)
     atk = chara.params.get(ParameterId.ATK).value
     print(f'力={atk}, 武器={eq.name}(Lv.{eq.level})')
     print(f'　→ 総攻撃力={chara.calc_atk()}')
@@ -88,7 +88,7 @@ def main():
     chara = _create_default_character()
     eq = _create_steel_sword()
     eq.set_level(10)
-    chara.set_equip(eq)
+    chara.equipments.set(eq)
     chara.condition.add(ConditionId.ATK_UP)
     skill_level = 5
     chara.skills.add(SkillId.ATK_UP, skill_level)
