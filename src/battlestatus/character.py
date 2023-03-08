@@ -19,7 +19,6 @@ class Character:
             self._params = params
         else:
             self._params = Parameters()
-        self._equipment: tp.Optional[Equipment] = None
         self._equipments = AllEquipments()
         self._condition = Condition()
         self._skills = SkillDict()
