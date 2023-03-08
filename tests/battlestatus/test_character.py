@@ -44,9 +44,9 @@ class TestCharacter(unittest.TestCase):
         param = Parameters()
         param.set(ParameterId.ATK, ParameterValue(10))
         c = Character(param)
-        with mock.patch.object(c, '_calc_atk_equip') as mp_weapon:
+        with mock.patch.object(c, '_calc_param_equip') as mp_equip:
             c.calc_atk()
-            mp_weapon.assert_called_once_with(10)
+            mp_equip.assert_called_once_with(ParameterId.ATK, 10)
 
         # スキル補正
         param = Parameters()
@@ -62,16 +62,16 @@ class TestCharacter(unittest.TestCase):
         c.condition.add(ConditionId.ATK_UP)
         self.assertEqual(12, c.calc_atk())
 
-    def test_calc_atk_equip(self):
+    def test_calc_param_equip(self):
         c = Character()
-        atk = c._calc_atk_equip(5)
+        atk = c._calc_param_equip(ParameterId.ATK, 5)
         self.assertEqual(5, atk)
 
         c = Character()
         eqs = c.equipments
         eq = _create_equipment()
         eqs.set(eq)
-        atk = c._calc_atk_equip(5)
+        atk = c._calc_param_equip(ParameterId.ATK, 5)
         self.assertEqual(10, atk)
 
     def test_can_act(self):

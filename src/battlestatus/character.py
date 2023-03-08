@@ -47,19 +47,20 @@ class Character:
         :return: 攻撃力
         """
         atk = self.params.get(ParameterId.ATK).value
-        atk = self._calc_atk_equip(atk)
+        atk = self._calc_param_equip(ParameterId.ATK, atk)
         atk = self.condition.apply_atk(atk)
         atk = self.skills.apply_atk(atk)
         return int(atk)
 
-    def _calc_atk_equip(self, atk: int) -> int:
-        """装備品の攻撃力を適用します.
+    def _calc_param_equip(self, id_: ParameterId, value: int) -> int:
+        """装備品のパラメーターを適用します.
 
-        :params atk: 適用前の攻撃力
-        :return: 適用後の攻撃力
+        :param id_: パラメーター ID
+        :param value: 適用前のパラメーター値
+        :return: 適用後のパラメーター値
         """
         params = self._equipments.calc_params()
-        return atk + params.get(ParameterId.ATK).value
+        return value + params.get(id_).value
 
     def can_act(self) -> bool:
         """行動可能か？
