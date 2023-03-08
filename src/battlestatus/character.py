@@ -1,9 +1,7 @@
 """キャラクター."""
 
-import typing as tp
-
 from battlestatus.condition import Condition
-from battlestatus.equipment import Equipment, AllEquipments
+from battlestatus.equipment import AllEquipments
 from battlestatus.parameters import Parameters, ParameterId
 from battlestatus.skill import SkillDict
 
