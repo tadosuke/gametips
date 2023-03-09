@@ -46,10 +46,11 @@ class Character:
 
         :return: 攻撃力
         """
-        atk = self.params.get(ParameterId.ATK).value
-        atk = self._calc_param_equip(ParameterId.ATK, atk)
-        atk = self.condition.apply_param(ParameterId.ATK, atk)
-        atk = self.skills.apply_atk(atk)
+        id_ = ParameterId.ATK
+        atk = self.params.get(id_).value
+        atk = self._calc_param_equip(id_, atk)
+        atk = self.condition.apply_param(id_, atk)
+        atk = self.skills.apply_param(id_, atk)
         return int(atk)
 
     def _calc_param_equip(self, id_: ParameterId, value: int) -> int:
