@@ -1,5 +1,7 @@
 """言語システム共通の型定義."""
 
+from __future__ import annotations
+import typing as tp
 from enum import Enum
 from pathlib import Path
 
@@ -13,26 +15,6 @@ class LanguageId(Enum):
 
     Japanese = 'ja'
     English = 'en'
-
-
-class AbstractDictionary:
-    """テキスト辞書の抽象クラス.
-
-    :param name: 辞書名
-    :param data: 辞書データ
-    """
-
-    def __init__(
-            self,
-            name: str,
-            data: DictionaryDataType) -> None:
-        assert 0 < len(name)
-
-        self._name = name
-        self._data = data
-
-    def _get_data(self) -> DictionaryDataType:
-        return self._data
 
 
 class AbstractReader:
