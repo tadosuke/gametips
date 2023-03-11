@@ -18,10 +18,17 @@ class LanguageId(Enum):
 class AbstractDictionary:
     """テキスト辞書の抽象クラス.
 
+    :param name: 辞書名
     :param data: 辞書データ
     """
 
-    def __init__(self, data: DictionaryDataType) -> None:
+    def __init__(
+            self,
+            name: str,
+            data: DictionaryDataType) -> None:
+        assert 0 < len(name)
+
+        self._name = name
         self._data = data
 
     def _get_data(self) -> DictionaryDataType:
@@ -34,12 +41,13 @@ class AbstractReader:
     def __init__(self, path: Path) -> None:
         self._path = path
 
-    def read(self, language: LanguageId):
+    def read(self, language: LanguageId) -> DictionaryDataType:
         """指定した言語で辞書を読み込みます.
 
         :param language: 言語
+        :return: 辞書データ
         """
-        return None
+        return {}
 
     def _get_path(self) -> Path:
         return self._path

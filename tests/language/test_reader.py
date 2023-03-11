@@ -1,7 +1,6 @@
 """reader モジュールのテスト."""
 
 import unittest
-from unittest import mock
 from pathlib import Path
 
 from language.reader import CsvReader
