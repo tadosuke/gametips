@@ -1,8 +1,6 @@
 """言語ファイルの読み込みモジュール."""
 
 import csv
-import logging
-import traceback
 from pathlib import Path
 
 from language.types import AbstractReader, LanguageId, DictionaryDataType
