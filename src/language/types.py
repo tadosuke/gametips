@@ -23,13 +23,17 @@ class AbstractReader:
     def __init__(self, path: Path) -> None:
         self._path = path
 
-    def read(self, language: LanguageId) -> DictionaryDataType:
+    def read(self, language: LanguageId) -> tuple[bool, DictionaryDataType]:
         """指定した言語で辞書を読み込みます.
 
         :param language: 言語
         :return: 辞書データ
         """
-        return {}
+        raise NotImplementedError
 
     def _get_path(self) -> Path:
         return self._path
+
+    @property
+    def name(self) -> str:
+        return self._path.name
