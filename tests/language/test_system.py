@@ -12,65 +12,65 @@ from language.types import LanguageId
 class TestSystem(unittest.TestCase):
 
     def test_init(self):
-        ds = System()
-        self.assertEqual({}, ds._dictionaries)
-        self.assertEqual(LanguageId.Japanese, ds.language)
+        system = System()
+        self.assertEqual({}, system._dictionaries)
+        self.assertEqual(LanguageId.Japanese, system.language)
 
-        ds = System(LanguageId.English)
-        self.assertEqual(LanguageId.English, ds.language)
+        system = System(LanguageId.English)
+        self.assertEqual(LanguageId.English, system.language)
 
     def test_load_dictionary(self):
-        ds = System()
+        system = System()
         reader = CsvReader(Path('test.csv'))
-        self.assertEqual(0, len(ds._dictionaries))
-        ds.load_dictionary(reader)
-        self.assertEqual(1, len(ds._dictionaries))
+        self.assertEqual(0, len(system._dictionaries))
+        system.load_dictionary(reader)
+        self.assertEqual(1, len(system._dictionaries))
         reader = CsvReader(Path('test2.csv'))
-        ds.load_dictionary(reader)
-        self.assertEqual(2, len(ds._dictionaries))
+        system.load_dictionary(reader)
+        self.assertEqual(2, len(system._dictionaries))
 
     def test_remove_dictionary(self):
-        ds = System()
+        system = System()
         reader = CsvReader(Path('test.csv'))
-        ds.load_dictionary(reader)
+        system.load_dictionary(reader)
 
         # 存在しない辞書
-        ds.remove_dictionary('invalid')
-        self.assertEqual(1, len(ds._dictionaries))
+        system.remove_dictionary('invalid')
+        self.assertEqual(1, len(system._dictionaries))
 
         # 存在する辞書
-        ds.remove_dictionary(reader.name)
-        self.assertEqual(0, len(ds._dictionaries))
+        system.remove_dictionary(reader.name)
+        self.assertEqual(0, len(system._dictionaries))
 
     def test_change_language(self):
-        ds = System()
-        with mock.patch.object(ds, '_reload_all_dictionaries') as mp_reload:
-            ds.change_language(LanguageId.English)
-            self.assertEqual(LanguageId.English, ds.language)
+        system = System()
+        with mock.patch.object(system, '_reload_all_dictionaries') as mp_reload:
+            system.change_language(LanguageId.English)
+            self.assertEqual(LanguageId.English, system.language)
             mp_reload.assert_called_once()
 
     def test_get_text(self):
-        ds = System()
+        system = System()
         reader = CsvReader(Path('test.csv'))
-        ds.load_dictionary(reader)
+        system.load_dictionary(reader)
         reader = CsvReader(Path('test2.csv'))
-        ds.load_dictionary(reader)
+        system.load_dictionary(reader)
 
         # 成功
-        text = ds.get_text('test', 'hello')
+        text = system.get_text('test', 'hello')
         self.assertEqual('こんにちは', text)
-        text = ds.get_text('test2', 'weapon_1')
+        text = system.get_text('test2', 'weapon_1')
         self.assertEqual('銅の剣', text)
 
         # 英語
-        ds.change_language(LanguageId.English)
-        text = ds.get_text('test', 'hello')
+        system.change_language(LanguageId.English)
+        text = system.get_text('test', 'hello')
         self.assertEqual('Hello!', text)
-        text = ds.get_text('test2', 'weapon_2')
+        text = system.get_text('test2', 'weapon_2')
         self.assertEqual('Iron sword', text)
 
         # 辞書違い
-        text = ds.get_text('test', 'weapon_1')
+        text = system.get_text('test', 'weapon_1')
         self.assertIsNone(text)
 
 
