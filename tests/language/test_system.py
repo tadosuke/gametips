@@ -21,14 +21,14 @@ class TestSystem(unittest.TestCase):
 
     def test_load_dictionary(self):
         ds = System()
-        reader = CsvReader(Path('language/test.csv'))
+        reader = CsvReader(Path('test.csv'))
         self.assertEqual(0, len(ds._dictionaries))
         ds.load_dictionary(reader)
         self.assertEqual(1, len(ds._dictionaries))
 
     def test_remove_dictionary(self):
         ds = System()
-        reader = CsvReader(Path('language/test.csv'))
+        reader = CsvReader(Path('test.csv'))
         ds.load_dictionary(reader)
 
         # 存在しない辞書
@@ -46,17 +46,24 @@ class TestSystem(unittest.TestCase):
             self.assertEqual(LanguageId.English, ds.language)
             mp_reload.assert_called_once()
 
+    def test_get_text(self):
+        ds = System()
+        reader = CsvReader(Path('test.csv'))
+        ds.load_dictionary(reader)
+        text = ds.get_text('test', 'hoge')
+        self.assertEqual('text1', text)
+
 
 class TestTextDictionary(unittest.TestCase):
 
     def test_init(self):
-        reader = CsvReader(Path('language/test.csv'))
+        reader = CsvReader(Path('test.csv'))
         with mock.patch('language.system.TextDictionary.reload') as mp_reload:
             TextDictionary(reader)
             mp_reload.assert_called_once_with(LanguageId.Japanese)
 
     def test_get_text(self):
-        reader = CsvReader(Path('language/test.csv'))
+        reader = CsvReader(Path('test.csv'))
 
         d = TextDictionary(reader, LanguageId.Japanese)
         self.assertFalse(d.is_empty())
@@ -64,7 +71,7 @@ class TestTextDictionary(unittest.TestCase):
         self.assertEqual('text1', text)
 
     def test_reload(self):
-        reader = CsvReader(Path('language/test.csv'))
+        reader = CsvReader(Path('test.csv'))
         d = TextDictionary(reader)
 
         # 呼び出しチェック

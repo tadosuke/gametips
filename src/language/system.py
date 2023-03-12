@@ -3,10 +3,7 @@
 from __future__ import annotations
 import typing as tp
 
-from language.types import AbstractReader, LanguageId
-
-# 辞書の内部データ型
-DictionaryDataType = dict[str, str]
+from language.types import AbstractReader, LanguageId, TextDictionaryDataType
 
 
 class System:
@@ -40,6 +37,20 @@ class System:
         self._language = language
         self._reload_all_dictionaries()
 
+    def get_text(
+            self,
+            dictionary_name: str,
+            text_name: str) -> tp.Optional[str]:
+        """テキストを得ます.
+
+        :param dictionary_name: 辞書名
+        :param text_name: テキスト名
+        """
+        d = self._dictionaries.get(dictionary_name)
+        if d is None:
+            return None
+        return d.get_text(text_name)
+
     @property
     def language(self) -> LanguageId:
         """現在の言語."""
@@ -63,7 +74,7 @@ class TextDictionary:
             reader: AbstractReader,
             language: LanguageId = LanguageId.Japanese) -> None:
         self._reader = reader
-        self._data: DictionaryDataType = {}
+        self._data: TextDictionaryDataType = {}
         self.reload(language)
 
     @property

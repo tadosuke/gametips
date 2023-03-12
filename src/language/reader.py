@@ -3,7 +3,7 @@
 import csv
 from pathlib import Path
 
-from language.types import AbstractReader, LanguageId, DictionaryDataType
+from language.types import AbstractReader, LanguageId, TextDictionaryDataType
 
 
 class CsvReader(AbstractReader):
@@ -15,7 +15,7 @@ class CsvReader(AbstractReader):
     def __init__(self, csv_path: Path) -> None:
         super().__init__(csv_path)
 
-    def read(self, language: LanguageId) -> tuple[bool, DictionaryDataType]:
+    def read(self, language: LanguageId) -> tuple[bool, TextDictionaryDataType]:
         """(override)辞書を読み込みます.
 
         :return: 読み込み結果（成功したら True）、辞書データ
@@ -39,5 +39,5 @@ class CsvReader(AbstractReader):
 class NullReader(AbstractReader):
     """空の読み込みクラス."""
 
-    def read(self, language: LanguageId) -> DictionaryDataType:
+    def read(self, language: LanguageId) -> TextDictionaryDataType:
         return {}

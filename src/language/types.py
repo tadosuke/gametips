@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 # 辞書の内部データ型
-DictionaryDataType = dict[str, str]
+TextDictionaryDataType = dict[str, str]
 
 
 class LanguageId(Enum):
@@ -23,7 +23,7 @@ class AbstractReader:
     def __init__(self, path: Path) -> None:
         self._path = path
 
-    def read(self, language: LanguageId) -> tuple[bool, DictionaryDataType]:
+    def read(self, language: LanguageId) -> tuple[bool, TextDictionaryDataType]:
         """指定した言語で辞書を読み込みます.
 
         :param language: 言語
@@ -36,4 +36,4 @@ class AbstractReader:
 
     @property
     def name(self) -> str:
-        return self._path.name
+        return self._path.stem
