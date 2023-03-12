@@ -25,6 +25,9 @@ class TestSystem(unittest.TestCase):
         self.assertEqual(0, len(ds._dictionaries))
         ds.load_dictionary(reader)
         self.assertEqual(1, len(ds._dictionaries))
+        reader = CsvReader(Path('test2.csv'))
+        ds.load_dictionary(reader)
+        self.assertEqual(2, len(ds._dictionaries))
 
     def test_remove_dictionary(self):
         ds = System()
@@ -50,16 +53,24 @@ class TestSystem(unittest.TestCase):
         ds = System()
         reader = CsvReader(Path('test.csv'))
         ds.load_dictionary(reader)
+        reader = CsvReader(Path('test2.csv'))
+        ds.load_dictionary(reader)
 
         # 成功
         text = ds.get_text('test', 'hello')
         self.assertEqual('こんにちは', text)
+        text = ds.get_text('test2', 'weapon_1')
+        self.assertEqual('銅の剣', text)
+
+        # 英語
         ds.change_language(LanguageId.English)
         text = ds.get_text('test', 'hello')
         self.assertEqual('Hello!', text)
+        text = ds.get_text('test2', 'weapon_2')
+        self.assertEqual('Iron sword', text)
 
         # 辞書違い
-        text = ds.get_text('invalid', 'hello')
+        text = ds.get_text('test', 'weapon_1')
         self.assertIsNone(text)
 
 
