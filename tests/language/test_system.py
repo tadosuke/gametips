@@ -14,9 +14,37 @@ class TestSystem(unittest.TestCase):
     def test_init(self):
         ds = System()
         self.assertEqual({}, ds._dictionaries)
+        self.assertEqual(LanguageId.Japanese, ds.language)
+
+        ds = System(LanguageId.English)
+        self.assertEqual(LanguageId.English, ds.language)
 
     def test_load_dictionary(self):
-        pass
+        ds = System()
+        reader = CsvReader(Path('language/test.csv'))
+        self.assertEqual(0, len(ds._dictionaries))
+        ds.load_dictionary(reader)
+        self.assertEqual(1, len(ds._dictionaries))
+
+    def test_remove_dictionary(self):
+        ds = System()
+        reader = CsvReader(Path('language/test.csv'))
+        ds.load_dictionary(reader)
+
+        # 存在しない辞書
+        ds.remove_dictionary('invalid')
+        self.assertEqual(1, len(ds._dictionaries))
+
+        # 存在する辞書
+        ds.remove_dictionary(reader.name)
+        self.assertEqual(0, len(ds._dictionaries))
+
+    def test_change_language(self):
+        ds = System()
+        with mock.patch.object(ds, '_reload_all_dictionaries') as mp_reload:
+            ds.change_language(LanguageId.English)
+            self.assertEqual(LanguageId.English, ds.language)
+            mp_reload.assert_called_once()
 
 
 class TestTextDictionary(unittest.TestCase):
@@ -29,7 +57,8 @@ class TestTextDictionary(unittest.TestCase):
 
     def test_get_text(self):
         reader = CsvReader(Path('language/test.csv'))
-        d = TextDictionary(reader)
+
+        d = TextDictionary(reader, LanguageId.Japanese)
         self.assertFalse(d.is_empty())
         text = d.get_text('hoge')
         self.assertEqual('text1', text)
@@ -37,6 +66,11 @@ class TestTextDictionary(unittest.TestCase):
     def test_reload(self):
         reader = CsvReader(Path('language/test.csv'))
         d = TextDictionary(reader)
+
+        # 呼び出しチェック
+        with mock.patch.object(d._reader, 'read', return_value=(False, {})) as mp_read:
+            d.reload(LanguageId.English)
+            mp_read.assert_called_once_with(LanguageId.English)
 
         # 成功
         with mock.patch.object(d._reader, 'read', return_value=(True, {'hoge': 'fuga'})):

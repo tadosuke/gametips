@@ -21,16 +21,12 @@ class System:
     def load_dictionary(self, reader: AbstractReader) -> None:
         """辞書を読み込みます.
 
+        既に同名の辞書を読み込んでいる場合は上書きされます.
+
         :param reader: 辞書の読み込みオブジェクト
         """
-        self._dictionaries = TextDictionary(reader, self._language)
-
-    def add_dictionary(self, dictionary: TextDictionary) -> None:
-        """辞書を追加します..
-
-        :param dictionary: 辞書
-        """
-        self._dictionaries[dictionary.name] = dictionary
+        d = TextDictionary(reader, self._language)
+        self._dictionaries[reader.name] = d
 
     def remove_dictionary(self, dictionary_name: str) -> None:
         """辞書を削除します.
@@ -39,17 +35,10 @@ class System:
         """
         self._dictionaries.pop(dictionary_name, None)
 
-    def get_dictionary(self, dictionary_name: str) -> tp.Optional[TextDictionary]:
-        """辞書を得ます.
-
-        :param dictionary_name: 辞書名
-        :return: 辞書。見つからない場合は None
-        """
-        return self._dictionaries.get(dictionary_name)
-
     def change_language(self, language: LanguageId):
         """言語を変更します."""
         self._language = language
+        self._reload_all_dictionaries()
 
     @property
     def language(self) -> LanguageId:
