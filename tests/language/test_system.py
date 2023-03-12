@@ -50,8 +50,14 @@ class TestSystem(unittest.TestCase):
         ds = System()
         reader = CsvReader(Path('test.csv'))
         ds.load_dictionary(reader)
+
+        # 成功
         text = ds.get_text('test', 'hoge')
         self.assertEqual('text1', text)
+
+        # 辞書違い
+        text = ds.get_text('invalid', 'hoge')
+        self.assertIsNone(text)
 
 
 class TestTextDictionary(unittest.TestCase):
