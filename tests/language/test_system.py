@@ -52,11 +52,14 @@ class TestSystem(unittest.TestCase):
         ds.load_dictionary(reader)
 
         # 成功
-        text = ds.get_text('test', 'hoge')
-        self.assertEqual('text1', text)
+        text = ds.get_text('test', 'hello')
+        self.assertEqual('こんにちは', text)
+        ds.change_language(LanguageId.English)
+        text = ds.get_text('test', 'hello')
+        self.assertEqual('Hello!', text)
 
         # 辞書違い
-        text = ds.get_text('invalid', 'hoge')
+        text = ds.get_text('invalid', 'hello')
         self.assertIsNone(text)
 
 
@@ -71,10 +74,17 @@ class TestTextDictionary(unittest.TestCase):
     def test_get_text(self):
         reader = CsvReader(Path('test.csv'))
 
+        # 日本語
         d = TextDictionary(reader, LanguageId.Japanese)
         self.assertFalse(d.is_empty())
-        text = d.get_text('hoge')
-        self.assertEqual('text1', text)
+        text = d.get_text('hello')
+        self.assertEqual('こんにちは', text)
+
+        # 英語
+        d = TextDictionary(reader, LanguageId.English)
+        self.assertFalse(d.is_empty())
+        text = d.get_text('hello')
+        self.assertEqual('Hello!', text)
 
     def test_reload(self):
         reader = CsvReader(Path('test.csv'))
