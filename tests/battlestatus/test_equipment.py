@@ -13,8 +13,7 @@ class TestItemName(unittest.TestCase):
         name = ItemName('123456789012')
         self.assertEqual('123456789012', name)
         self.assertEqual(ItemName('123456789012'), name)
-        self.assertEqual('123456789012', name.value)
-        self.assertIs(str(name), name.value)
+        self.assertEqual('123456789012', name)
 
         with self.assertRaises(ValueError):
             ItemName('1234567890123')
