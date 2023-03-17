@@ -1,13 +1,14 @@
 """装備品."""
 from __future__ import annotations
 
+from collections import UserString
 from dataclasses import dataclass
 import typing as tp
 
 from battlestatus.parameters import Parameters, ParameterId, ParameterValue
 
 
-class ItemName:
+class ItemName(UserString):
     """アイテム名."""
 
     MAX_LENGTH = 12
@@ -15,19 +16,7 @@ class ItemName:
     def __init__(self, name: str) -> None:
         if self.MAX_LENGTH < len(name):
             raise ValueError
-        self._name = name
-
-    @property
-    def value(self) -> str:
-        return self._name
-
-    def __str__(self) -> str:
-        return self._name
-
-    def __eq__(self, other) -> bool:
-        if isinstance(other, ItemName):
-            return self._name == other.value
-        return self._name == other
+        self.data = name
 
 
 @dataclass
