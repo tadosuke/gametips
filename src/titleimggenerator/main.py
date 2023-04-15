@@ -5,14 +5,6 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 
-# フォント名
-_FONT_NAME = 'HGRPP1'
-# フォントサイズ
-_FONT_SIZE = 50
-
-# 背景とテキストの間隔
-_PADDING_Y = 25
-
 # 画像ファイルのあるフォルダ
 _IMAGE_DIR = 'images'
 
@@ -22,13 +14,19 @@ _IMAGE_FILENAME_DICT = {
 	'english': 'english.png',
 }
 
+# フォント名
+_FONT_NAME = 'HGRPP1'
+# フォントサイズ
+_FONT_SIZE = 50
+
+# 背景とテキストの間隔
+_PADDING_Y = 25
+
 
 class _BackGround:
 	"""背景画像."""
 
-	def __init__(self, category_name):
-		image_filename = _IMAGE_FILENAME_DICT[category_name]
-		image_path = f'{_IMAGE_DIR}/{image_filename}'
+	def __init__(self, image_path: str):
 		self.image = Image.open(image_path)
 
 	def paste(self, text_bg):
@@ -161,7 +159,8 @@ class TitleImageGenerator:
 		:param text: タイトルテキスト
 		:param out_path: 出力先のパス
 		"""
-		bg_image = _BackGround(category)
+		image_path = f'{self._directory}/{self._category_dict[category]}'
+		bg_image = _BackGround(image_path)
 		text_info = _TextInfo(text, self._font)
 		text_bg = _TextBackGround(bg_image.image.width, text_info, _PADDING_Y)
 		bg_image.paste(text_bg)
