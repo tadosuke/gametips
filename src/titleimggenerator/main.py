@@ -135,6 +135,39 @@ class _TextBackGround:
 			cur_height += line_height + text_info.LINE_SPACE
 
 
+class TitleImageGenerator:
+	"""カテゴリとテキストから、テキスト入りタイトル画像を生成するクラス.
+
+	:param directory: 画像ファイルのあるディレクトリ
+	:param category_dict: カテゴリ→画像ファイル名の辞書
+	"""
+
+	def __init__(
+			self,
+			directory: str,
+			category_dict: dict[str, str]) -> None:
+		self._directory = directory
+		self._category_dict = category_dict
+		self._font = ImageFont.truetype(_FONT_NAME, _FONT_SIZE)
+
+	def generate(
+			self,
+			category: str,
+			text: str,
+			out_path: str):
+		"""画像を生成します.
+
+		:param category: カテゴリ名
+		:param text: タイトルテキスト
+		:param out_path: 出力先のパス
+		"""
+		bg_image = _BackGround(category)
+		text_info = _TextInfo(text, self._font)
+		text_bg = _TextBackGround(bg_image.image.width, text_info, _PADDING_Y)
+		bg_image.paste(text_bg)
+		bg_image.image.save(out_path)
+
+
 def main():
 	"""メイン関数."""
 
@@ -142,20 +175,11 @@ def main():
 	category_name = 'english'
 	# 表示するテキスト
 	text = '【ボイトレ】\n$アンザッツ$4～6 を\n$一ヶ月！$'
+	# 出力先
+	out_path = 'images/out.png'
 
-	# 画像を読み込む
-	bg_image = _BackGround(category_name)
-
-	# フォント
-	font = ImageFont.truetype(_FONT_NAME, _FONT_SIZE)
-	# テキスト
-	text_info = _TextInfo(text, font)
-	# テキスト背景
-	text_bg = _TextBackGround(bg_image.image.width, text_info, _PADDING_Y)
-	# 元画像に貼り付ける
-	bg_image.paste(text_bg)
-
-	bg_image.image.show()
+	generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
+	generator.generate(category_name, text, out_path)
 
 
 if __name__ == '__main__':
