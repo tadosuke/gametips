@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import traceback
+
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QFileDialog
 
@@ -21,6 +23,8 @@ _IMAGE_FILENAME_DICT = {
 class _MainWidget(QtWidgets.QWidget):
     """メインウィジェット."""
 
+    _TITLE_EDIT_HEIGHT = 60
+
     def __init__(
             self,
             parent: QtWidgets.QWidget = None) -> None:
@@ -28,8 +32,9 @@ class _MainWidget(QtWidgets.QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
+        """UI を初期化します."""
         self._combobox_category = self._create_category_combobox()
-        self._edit_title = QtWidgets.QLineEdit()
+        self._edit_title = self._create_title_textedit()
         button_save = QtWidgets.QPushButton('保存')
         button_save.clicked.connect(self._on_save)
 
@@ -40,29 +45,65 @@ class _MainWidget(QtWidgets.QWidget):
         self.setLayout(layout)
 
     def _create_category_combobox(self) -> QtWidgets.QComboBox:
+        """カテゴリ選択コンボボックスを生成します."""
         combobox = QtWidgets.QComboBox()
         combobox.addItems(_IMAGE_FILENAME_DICT.keys())
         return combobox
 
+    def _create_title_textedit(self) -> QtWidgets.QTextEdit:
+        """タイトルテキスト入力ボックスを生成します."""
+        edit_title = QtWidgets.QTextEdit()
+        edit_title.setPlainText('【Category】本文$強調$文字\n2行目メッセージ')
+        edit_title.setMaximumHeight(self._TITLE_EDIT_HEIGHT)
+        return edit_title
+
     def _on_save(self):
-        category = self._combobox_category.currentText()
-        if category == "":
-            return
-        if self._edit_title.text() == "":
+        """セーブボタンが押された時に呼ばれます."""
+        if not self._validate():
             return
 
-        out_path, selected_filter = QFileDialog.getSaveFileName(
+        out_path = self._show_save_dialog()
+        if out_path == '':
+            return
+
+        is_success = self._generate(out_path)
+        self._show_result(is_success)
+
+    def _validate(self) -> bool:
+        """入力値を検証します."""
+        if self._combobox_category.currentText() == "":
+            return False
+        if self._edit_title.toPlainText() == "":
+            return False
+        return True
+
+    def _show_save_dialog(self) -> str:
+        """保存ダイアログを表示します."""
+        out_path, _ = QFileDialog.getSaveFileName(
             self,
             '保存先を選択してください。',
-            '')
-        if out_path == "":
-            return
+            f'{self._combobox_category.currentText()}_.png',
+            '画像ファイル (.*png)')
+        return out_path
 
-        generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
-        generator.generate(category, self._edit_title.text(), out_path)
+    def _generate(self, out_path: str) -> bool:
+        """画像を生成します."""
+        category = self._combobox_category.currentText()
+        title = self._edit_title.toPlainText()
+        try:
+            generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
+            generator.generate(category, title, out_path)
+        except Exception:
+            traceback.format_exc()
+            return False
+        return True
 
-        message = QtWidgets.QMessageBox()
-        message.setText('保存しました。')
+    def _show_result(self, is_success: bool) -> None:
+        message = QtWidgets.QMessageBox(self)
+        if is_success:
+            message.setText('保存しました。')
+        else:
+            message.setText('保存に失敗しました。')
         message.show()
 
 
