@@ -7,6 +7,7 @@ from PySide6.QtWidgets import QFileDialog
 
 from model import TitleImageGenerator
 
+
 # 画像ファイルのあるフォルダ
 _IMAGE_DIR = 'images'
 
@@ -27,19 +28,25 @@ class _MainWidget(QtWidgets.QWidget):
         self._setup_ui()
 
     def _setup_ui(self):
-        self._edit_category = QtWidgets.QLineEdit()
+        self._combobox_category = self._create_category_combobox()
         self._edit_title = QtWidgets.QLineEdit()
         button_save = QtWidgets.QPushButton('保存')
         button_save.clicked.connect(self._on_save)
 
         layout = QtWidgets.QFormLayout()
-        layout.addRow('カテゴリ', self._edit_category)
+        layout.addRow('カテゴリ', self._combobox_category)
         layout.addRow('タイトル', self._edit_title)
         layout.addWidget(button_save)
         self.setLayout(layout)
 
+    def _create_category_combobox(self) -> QtWidgets.QComboBox:
+        combobox = QtWidgets.QComboBox()
+        combobox.addItems(_IMAGE_FILENAME_DICT.keys())
+        return combobox
+
     def _on_save(self):
-        if self._edit_category.text() == "":
+        category = self._combobox_category.currentText()
+        if category == "":
             return
         if self._edit_title.text() == "":
             return
@@ -52,7 +59,7 @@ class _MainWidget(QtWidgets.QWidget):
             return
 
         generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
-        generator.generate(self._edit_category.text(), self._edit_title.text(), out_path)
+        generator.generate(category, self._edit_title.text(), out_path)
 
         message = QtWidgets.QMessageBox()
         message.setText('保存しました。')
@@ -70,9 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def _setup_ui(self):
         self.setWindowTitle('TitleImageGenerator')
-
         widget = _MainWidget(self)
-
         self.setCentralWidget(widget)
 
 
