@@ -44,10 +44,12 @@ class _TextInfo:
 	def calc_size(self):
 		width = 0
 		height = 0
-		for line in self.line_list:
+		for i, line in enumerate(self.line_list):
+			if 1 <= i:
+				height += self.LINE_SPACE
 			line_width, line_height = line.calc_size()
 			width += max(width, line_width)
-			height += line_height + self.LINE_SPACE
+			height += line_height
 		return width, height
 
 

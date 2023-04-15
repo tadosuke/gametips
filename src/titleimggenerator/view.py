@@ -17,6 +17,7 @@ _IMAGE_DIR = 'images'
 _IMAGE_FILENAME_DICT = {
     'music': 'music.png',
     'english': 'english.png',
+    'program': 'program.png',
 }
 
 
