@@ -9,8 +9,14 @@ _IMAGE_DIR = 'images'
 
 # カテゴリ名→画像ファイル名の辞書
 _IMAGE_FILENAME_DICT = {
-    'music': 'music.png',
+    'common': 'common.png',
     'english': 'english.png',
+    'health': 'health.png',
+    'life': 'life.png',
+    'music': 'music.png',
+    'program': 'program.png',
+    'python': 'program.png',
+    'voice': 'voice.png',
 }
 
 
