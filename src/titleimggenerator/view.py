@@ -37,13 +37,15 @@ class _MainWidget(QtWidgets.QWidget):
         super().__init__(parent=parent)
 
         self._image_dir: str = f'{os.path.dirname(__file__)}/{_IMAGE_DIR}'
+        self._check_image_folder()
+        self._setup_ui()
+
+    def _check_image_folder(self):
         if not os.path.exists(self._image_dir):
             message = QtWidgets.QMessageBox(self)
             message.setText(f'画像フォルダが見つかりません。{self._image_dir}')
             message.show()
             self.close()
-
-        self._setup_ui()
 
     def _setup_ui(self):
         """UI を初期化します."""
