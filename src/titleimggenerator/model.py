@@ -75,11 +75,8 @@ class _Line:
         return phrase_list
 
     def calc_size(self):
-        width = 0
-        height = 0
-        for phrase in self.phrase_list:
-            width += phrase.width
-            height = max(height, phrase.height)
+        width = sum(phrase.width for phrase in self.phrase_list)
+        height = max(phrase.height for phrase in self.phrase_list)
         return width, height
 
 
