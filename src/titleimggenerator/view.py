@@ -40,14 +40,14 @@ class _MainWidget(QtWidgets.QWidget):
         self._check_image_folder()
         self._setup_ui()
 
-    def _check_image_folder(self):
+    def _check_image_folder(self) -> None:
         if not os.path.exists(self._image_dir):
             message = QtWidgets.QMessageBox(self)
             message.setText(f'画像フォルダが見つかりません。{self._image_dir}')
             message.show()
             self.close()
 
-    def _setup_ui(self):
+    def _setup_ui(self) -> None:
         """UI を初期化します."""
         self._combobox_category = self._create_category_combobox()
         self._edit_title = self._create_title_textedit()
@@ -74,7 +74,7 @@ class _MainWidget(QtWidgets.QWidget):
         edit_title.setMaximumHeight(self._TITLE_EDIT_HEIGHT)
         return edit_title
 
-    def _on_save(self):
+    def _on_save(self) -> None:
         """セーブボタンが押された時に呼ばれます."""
         if not self._validate():
             return
@@ -134,13 +134,13 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(parent=parent)
         self._setup_ui()
 
-    def _setup_ui(self):
+    def _setup_ui(self) -> None:
         self.setWindowTitle('TitleImageGenerator')
         widget = _MainWidget(self)
         self.setCentralWidget(widget)
 
 
-def main():
+def main() -> None:
     app = QtWidgets.QApplication()
     window = MainWindow()
     window.show()

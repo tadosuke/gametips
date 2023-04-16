@@ -15,10 +15,10 @@ _PADDING_Y = 25
 class _BackGround:
     """背景画像."""
 
-    def __init__(self, image_path: str):
+    def __init__(self, image_path: str) -> None:
         self.image = Image.open(image_path)
 
-    def paste(self, text_bg):
+    def paste(self, text_bg: _TextBackGround) -> None:
         """テキスト入りの背景を貼り付ける"""
         bg_pos = (0, int(self.image.height / 2 - text_bg.image.height / 2))
         self.image.paste(text_bg.image, bg_pos, mask=text_bg.image)
@@ -35,10 +35,10 @@ class _TextInfo:
         self.text = text
 
     @staticmethod
-    def _split_lines(text: str, font) -> list[_Line]:
+    def _split_lines(text: str, font: ImageFont.FreeTypeFont) -> list[_Line]:
         return [_Line(line_str, font) for line_str in text.splitlines()]
 
-    def calc_size(self):
+    def calc_size(self) -> tuple[int, int]:
         width = 0
         height = 0
         for i, line in enumerate(self.line_list):
@@ -64,7 +64,9 @@ class _Line:
         self.phrase_list = self._split_phrases(line_str, font)
 
     @classmethod
-    def _split_phrases(cls, line_str: str, font) -> list[_Phrase]:
+    def _split_phrases(
+            cls, line_str: str,
+            font: ImageFont.FreeTypeFont) -> list[_Phrase]:
         phrase_list = []
         phrase_strs = line_str.split(cls._STRONG_DELIMITER)
         for i, phrase_str in enumerate(phrase_strs):
@@ -83,7 +85,11 @@ class _Line:
 class _Phrase:
     """文節."""
 
-    def __init__(self, phrase_str: str, font, color):
+    def __init__(
+            self,
+            phrase_str: str,
+            font: ImageFont.FreeTypeFont,
+            color: tuple[int, int, int, int]):
         self.text = phrase_str
         self.color = color
         self.font = font
@@ -93,19 +99,19 @@ class _Phrase:
 class _TextBackGround:
     """テキスト背景."""
 
-    def __init__(self, width, text_info: _TextInfo, padding_y: int):
+    def __init__(self, width: int, text_info: _TextInfo, padding_y: int) -> None:
         self.image = self._create_image(width, text_info, padding_y)
         self._add_text(text_info)
 
     @staticmethod
-    def _create_image(width, text_info: _TextInfo, padding_y: int):
+    def _create_image(width: int, text_info: _TextInfo, padding_y: int):
         """背景画像を生成します."""
         text_width, text_height = text_info.calc_size()
         bg_size = (width, text_height + padding_y * 2)
         bg_rgba = (0, 0, 0, 128)
         return Image.new("RGBA", bg_size, bg_rgba)
 
-    def _add_text(self, text_info: _TextInfo):
+    def _add_text(self, text_info: _TextInfo) -> None:
         """テキストを追加します."""
         text_draw = ImageDraw.Draw(self.image)
 
@@ -141,7 +147,7 @@ class TitleImageGenerator:
             self,
             category: str,
             text: str,
-            out_path: str):
+            out_path: str) -> None:
         """画像を生成します.
 
         :param category: カテゴリ名
