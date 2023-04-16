@@ -148,9 +148,14 @@ class TitleImageGenerator:
         :param text: タイトルテキスト
         :param out_path: 出力先のパス
         """
-        image_path = f'{self._directory}/{self._category_dict[category]}'
+        image_path = self._get_image_path(category)
         bg_image = _BackGround(image_path)
         text_info = _TextInfo(text, self._font)
         text_bg = _TextBackGround(bg_image.image.width, text_info, _PADDING_Y)
+
         bg_image.paste(text_bg)
         bg_image.image.save(out_path)
+
+    def _get_image_path(self, category: str) -> str:
+        image_file_name = self._category_dict[category]
+        return f'{self._directory}/{image_file_name}'
