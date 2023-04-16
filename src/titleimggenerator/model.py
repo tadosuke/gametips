@@ -94,15 +94,19 @@ class _TextBackGround:
     """テキスト背景."""
 
     def __init__(self, width, text_info: _TextInfo, padding_y: int):
-        # 背景を生成
+        self.image = self._create_image(width, text_info, padding_y)
+        self._add_text(text_info)
+
+    @staticmethod
+    def _create_image(width, text_info: _TextInfo, padding_y: int):
+        """背景画像を生成します."""
         text_width, text_height = text_info.calc_size()
         bg_size = (width, text_height + padding_y * 2)
         bg_rgba = (0, 0, 0, 128)
-        self.image = Image.new("RGBA", bg_size, bg_rgba)
-
-        self._add_text(text_info)
+        return Image.new("RGBA", bg_size, bg_rgba)
 
     def _add_text(self, text_info: _TextInfo):
+        """テキストを追加します."""
         text_draw = ImageDraw.Draw(self.image)
 
         text_width, text_height = text_info.calc_size()
