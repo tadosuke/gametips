@@ -63,13 +63,13 @@ class _Line:
     def __init__(self, line_str: str, font):
         self.phrase_list = self._split_phrases(line_str, font)
 
-    def _split_phrases(self, line_str: str, font) -> list[_Phrase]:
+    @classmethod
+    def _split_phrases(cls, line_str: str, font) -> list[_Phrase]:
         phrase_list = []
-        for i, phrase_str in enumerate(line_str.split(self._STRONG_DELIMITER)):
-            if i % 2 == 0:
-                phrase = _Phrase(phrase_str, font, self._NORMAL_RGBA)
-            else:
-                phrase = _Phrase(phrase_str, font, self._STRONG_RGBA)
+        phrase_strs = line_str.split(cls._STRONG_DELIMITER)
+        for i, phrase_str in enumerate(phrase_strs):
+            rgba = cls._NORMAL_RGBA if i % 2 == 0 else cls._STRONG_RGBA
+            phrase = _Phrase(phrase_str, font, rgba)
             phrase_list.append(phrase)
 
         return phrase_list
