@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os.path
+import sys
 import traceback
 
 from PySide6 import QtWidgets
@@ -30,6 +32,14 @@ class _MainWidget(QtWidgets.QWidget):
             self,
             parent: QtWidgets.QWidget = None) -> None:
         super().__init__(parent=parent)
+
+        self._image_dir: str = f'{os.path.dirname(__file__)}/{_IMAGE_DIR}'
+        if not os.path.exists(self._image_dir):
+            message = QtWidgets.QMessageBox(self)
+            message.setText(f'画像フォルダが見つかりません。{self._image_dir}')
+            message.show()
+            self.close()
+
         self._setup_ui()
 
     def _setup_ui(self):
@@ -92,7 +102,7 @@ class _MainWidget(QtWidgets.QWidget):
         category = self._combobox_category.currentText()
         title = self._edit_title.toPlainText()
         try:
-            generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
+            generator = TitleImageGenerator(self._image_dir, _IMAGE_FILENAME_DICT)
             generator.generate(category, title, out_path)
         except Exception:
             traceback.format_exc()
@@ -100,6 +110,7 @@ class _MainWidget(QtWidgets.QWidget):
         return True
 
     def _show_result(self, is_success: bool) -> None:
+        """結果を表示する."""
         message = QtWidgets.QMessageBox(self)
         if is_success:
             message.setText('保存しました。')
@@ -123,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
 
 
-def main():
+def main(*args):
     app = QtWidgets.QApplication()
     window = MainWindow()
     window.show()
@@ -131,4 +142,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)

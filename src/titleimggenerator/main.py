@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from titleimggenerator.model import TitleImageGenerator
+import os
 
+from titleimggenerator.model import TitleImageGenerator
 
 # 画像ファイルのあるフォルダ
 _IMAGE_DIR = 'images'
@@ -23,7 +24,8 @@ def main():
     # 出力先
     out_path = 'images/out.png'
 
-    generator = TitleImageGenerator(_IMAGE_DIR, _IMAGE_FILENAME_DICT)
+    image_dir = f'{os.path.dirname(__file__)}/{_IMAGE_DIR}'
+    generator = TitleImageGenerator(image_dir, _IMAGE_FILENAME_DICT)
     generator.generate(category_name, text, out_path)
 
 
