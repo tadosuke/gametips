@@ -34,12 +34,9 @@ class _TextInfo:
         self.line_list = self._split_lines(text, font)
         self.text = text
 
-    def _split_lines(self, text: str, font) -> list[_Line]:
-        line_list = []
-        for line_str in text.splitlines():
-            line = _Line(line_str, font)
-            line_list.append(line)
-        return line_list
+    @staticmethod
+    def _split_lines(text: str, font) -> list[_Line]:
+        return [_Line(line_str, font) for line_str in text.splitlines()]
 
     def calc_size(self):
         width = 0
