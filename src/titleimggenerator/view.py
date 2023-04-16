@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import os.path
-import sys
 import traceback
 
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QFileDialog
 
 from model import TitleImageGenerator
-
 
 # 画像ファイルのあるフォルダ
 _IMAGE_DIR = 'images'
@@ -139,7 +137,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
 
 
-def main(*args):
+def main():
     app = QtWidgets.QApplication()
     window = MainWindow()
     window.show()
@@ -147,4 +145,4 @@ def main(*args):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main()
