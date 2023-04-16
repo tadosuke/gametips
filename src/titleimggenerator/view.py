@@ -60,7 +60,8 @@ class _MainWidget(QtWidgets.QWidget):
         layout.addWidget(button_save)
         self.setLayout(layout)
 
-    def _create_category_combobox(self) -> QtWidgets.QComboBox:
+    @staticmethod
+    def _create_category_combobox() -> QtWidgets.QComboBox:
         """カテゴリ選択コンボボックスを生成します."""
         combobox = QtWidgets.QComboBox()
         combobox.addItems(_IMAGE_FILENAME_DICT.keys())
